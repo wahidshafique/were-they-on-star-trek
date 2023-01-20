@@ -10,3 +10,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 !.env.sample
 notes.txt
+# Local Netlify folder
+.netlify
+backups

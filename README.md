@@ -19,3 +19,13 @@ Its always interesting to see how many actors got their breaks on Star Trek.
 ## How it works
 
 Enter in whatever show or movie you're curious about, and the site will list out any intersecting actors between said show and the Star Trek universe at large.
+
+The project uses netlify and netlify functions implicitly, so you need to deploy there and pass in an `API_TOKEN` to the env (you can grab one by following instructions [here](https://developers.themoviedb.org/3/getting-started/introduction)).
+
+The only items it's comparing against are [canonical](https://en.wikipedia.org/wiki/List_of_Star_Trek_films#:~:text=The%20Star%20Trek%20canon%20includes,animated%20series%2C%20and%20thirteen%20films.) entries in the series.
+
+> The Star Trek canon includes the original series, seven spin-off television series, three animated series, and thirteen films.
+
+## Random Musings
+
+It seems like sometimes the entire appearance list of an actor is not present. For example, the entry for Jeffrey Combs in DS9 gives only `Brunt` or `Weyoun / Officer Mulkahey`, but never just `Weyoun`. The latter character appears in _many_ episodes of DS9, but the API is only counting...limited/hybrid appearances. Not sure what this is the case..

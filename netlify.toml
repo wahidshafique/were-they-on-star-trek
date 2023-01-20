@@ -1,2 +1,3 @@
-[functions]
-  included_files = ["stData/**"]
+[build]
+  command = "npm run build"
+  publish = "build"
