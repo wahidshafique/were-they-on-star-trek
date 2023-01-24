@@ -15,15 +15,19 @@
 		"@sveltejs/adapter-auto": "^1.0.0",
 		"@sveltejs/adapter-netlify": "^1.0.0-next.88",
 		"@sveltejs/kit": "^1.0.0",
+		"@types/lodash.debounce": "^4.0.7",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"autoprefixer": "^10.4.13",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"postcss": "^8.4.21",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
+		"tailwindcss": "^3.2.4",
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
 		"vite": "^4.0.0"
@@ -33,6 +37,7 @@
 		"@netlify/functions": "^1.4.0",
 		"browserless": "^9.8.0",
 		"dotenv": "^16.0.3",
-		"html-get": "^2.9.28"
+		"html-get": "^2.9.28",
+		"lodash.debounce": "^4.0.8"
 	}
 }
