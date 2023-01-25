@@ -28,10 +28,5 @@
 		<h2 class="mt-6 text-center text-3xl font-bold  dark:text-white">
 			{resultHeadline}
 		</h2>
-		<!-- <div class="w-full space-y-3">
-			<p>{JSON.stringify(searchResult)}</p>
-		</div> -->
 	</div>
-	<!-- <h1>{data.post.title}</h1>
-<div>{@html data.post.content}</div> -->
 </div>

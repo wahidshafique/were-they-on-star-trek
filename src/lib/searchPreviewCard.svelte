@@ -14,10 +14,21 @@
 	};
 </script>
 
-<button on:click={handleClick} class="group px-10">
+<!-- TODO: add this functionality -->
+<button
+	disabled={result.type === 'movie' || result.type === 'tv'}
+	on:click={handleClick}
+	class="group px-10"
+>
 	<div
-		class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8"
+		class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8 relative"
 	>
+		<!-- TODO: add this functionality -->
+		{#if result.type === 'movie' || result.type === 'tv'}
+			<div
+				class="w-full h-full before:content-['Movies & TV intersection search coming soon!'] text-slate-900 absolute bg-slate-200 isolate"
+			/>
+		{/if}
 		<img
 			src={result.image || 'https://image.tmdb.org/t/p/w200//oI2quZga94mj7dHlZP4YZJLfQ95.jpg'}
 			class="h-full w-full object-cover object-center group-hover:opacity-75"
