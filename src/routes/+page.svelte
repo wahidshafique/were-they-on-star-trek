@@ -1,12 +1,10 @@
 <script lang="ts">
-	import commBadgeSound from '$lib/assets/comm-badge.mp3';
-	import stLogo from '$lib/assets/st-logo.png';
 	import tmdbLogo from '$lib/assets/tmdb-attr.svg';
 	import SearchPreviewPane from '$lib/searchPreviewPane.svelte';
 
 	import debounce from 'lodash.debounce';
+	import Logo from '../lib/logo.svelte';
 
-	let commBadgeChirp: HTMLAudioElement;
 	let searchQuery: string;
 	let searchQueryResults;
 
@@ -18,7 +16,6 @@
 				.then((response) => response.json())
 				.then((data) => {
 					searchQueryResults = data.body;
-					console.log(searchQueryResults);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -28,22 +25,12 @@
 	}, 500);
 </script>
 
-<audio src={commBadgeSound} bind:this={commBadgeChirp} />
 <div
 	class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 isolate flex-col"
 >
 	<div class="w-full max-w-md space-y-3">
 		<div>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<img
-				tabindex="-1"
-				on:click={() => {
-					commBadgeChirp.play();
-				}}
-				class="dark:invert mx-auto h-12 w-auto"
-				src={stLogo}
-				alt="Star Trek Logo"
-			/>
+			<Logo />
 			<h2 class="mt-6 text-center text-3xl font-bold  dark:text-white">Were They on Star Trek?</h2>
 			<p class="mt-6 text-center dark:text-white">
 				Search for any TV Show or Actor, and you'll see whether there are any <span

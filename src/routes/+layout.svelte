@@ -10,6 +10,7 @@
 		alt=""
 	/>
 </div>
+
 <div class="dark:text-white bg-white">
 	<slot />
 </div>
