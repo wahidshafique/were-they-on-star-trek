@@ -26,7 +26,7 @@
 		<!-- TODO: add this functionality -->
 		{#if result.type === 'movie' || result.type === 'tv'}
 			<div
-				class="w-full h-full before:content-['Movies & TV intersection search coming soon!'] text-slate-900 absolute bg-slate-200 isolate"
+				class="w-full h-full before:content-['Movies/TV_intersection_coming_soon!'] text-slate-900 absolute bg-slate-200 isolate"
 			/>
 		{/if}
 		<img
