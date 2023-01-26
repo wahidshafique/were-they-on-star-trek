@@ -16,7 +16,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	// eslint-disable-next-line @typescript-eslint/no-array-constructor
 	const filteredResults: FilteredSearchResults = Array();
 
-	console.log(results);
+	console.log('Search Request: ', url.searchParams.get('query'));
+	// console.log(results);
 	if (results) {
 		for (const {
 			backdrop_path,
