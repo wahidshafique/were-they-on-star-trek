@@ -9,6 +9,7 @@ import desc from 'metascraper-description';
 import url from 'metascraper-url';
 import { data as existingStData } from './src/routes/stData.js';
 
+// WARNING: if true, the script will start the crawl process anew, which may about 7 hours to execution time
 const RECRAWL_EXISTING_CHARACTERS = false;
 
 const metascraper = _metascraper([image(), desc(), url()]);
@@ -36,20 +37,20 @@ const getContent = async (url) => {
 /** A helper that fetches and squishes various canonical star trek shows into a format that's useful for this app. This is what I used to generate the stData.json */
 
 const CANON_ST_TV_IDS = [
-	// 253, // tos
-	// 655, // tng
+	253, // tos
+	655, // tng
 	580, // ds9
-	// 1855, // voy
-	// 314, // ent
-	// 67198, // disco
-	// 85949, // picard
-	// 9030, // snw
+	1855, // voy
+	314, // ent
+	67198, // disco
+	85949, // picard
+	9030, // snw
 ];
 
 const CANON_ANIMATED_IDS = [
-	// 1992, // tas
-	// 85948, // low
-	// 106393, // prod
+	1992, // tas
+	85948, // low
+	106393, // prod
 ];
 
 const CANON_ST_MOVIE_IDS = [
@@ -66,8 +67,8 @@ const CANON_ST_MOVIE_IDS = [
 	201, // nemesis
 
 	13475, // star trek
-	106393, // into darkness
-	106393, // beyond
+	54138, // into darkness
+	188927, // beyond
 ];
 
 const apiKey = process.env.API_KEY;
@@ -75,7 +76,10 @@ const apiKey = process.env.API_KEY;
 const TV_AGG_CREDIT_EP = (tvId) =>
 	`https://api.themoviedb.org/3/tv/${tvId}/aggregate_credits?api_key=${apiKey}`;
 
-const TV_SPECIFIC_CREDIT_EP = (creditId) =>
+const MOVIE_CREDIT_EP = (movieId) =>
+	`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`;
+
+const SPECIFIC_CREDIT_EP = (creditId) =>
 	`https://api.themoviedb.org/3/credit/${creditId}?api_key=${apiKey}`;
 
 let finalAggregateCredits = {};
@@ -86,21 +90,25 @@ let playedCharacterCount = 0;
 console.time('Start of data fetch');
 let start = Date.now();
 // populate the tv shows first
-for (const tvId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS]) {
+for (const mediaId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MOVIE_IDS]) {
+	const isMovie = CANON_ST_MOVIE_IDS.includes(mediaId);
 	// we want the entire cast/crew list
-	const aggRes = await fetch(TV_AGG_CREDIT_EP(tvId));
+	const aggRes = isMovie
+		? await fetch(MOVIE_CREDIT_EP(mediaId))
+		: await fetch(TV_AGG_CREDIT_EP(mediaId));
 	const aggCreditData = await aggRes.json();
 	// in this data, we get roles that need to be expanded via another endpoint.
-	// for now I am focusing only on cast, not crew
+	// for now I am focusing only on cast, not crew (TODO: crew are important so figure this out later)
 	for (const castMembers of aggCreditData.cast) {
-		// there are ~3465 character entries to loop over here, each api call is ~8ms. So this entire thing should take about 30 seconds to run per show
 		castCount += 1;
-		for (const role of castMembers.roles) {
+		for (const role of [...(castMembers?.roles ?? [castMembers])]) {
 			playedCharacterCount += 1;
-			const credRes = await fetch(TV_SPECIFIC_CREDIT_EP(role.credit_id));
+
+			const credRes = await fetch(SPECIFIC_CREDIT_EP(role.credit_id));
 			const roleData = await credRes.json();
 
-			// to get character specific data I am pulling memory alpha. However, to avoid needless execution time (each crawl is about 2 seconds), first check whether the current role already exists in our data set, _and_ has a key called memAlphaMeta. Checking other keys is useless as it runs much faster; the biggest return is on cutting down crawl time
+			console.log(roleData, role);
+			// to get character specific data I am pulling memory alpha. However, to avoid needless execution time (each crawl is about 2 seconds), first check whether the current role already exists in our data set, _and_ has a key called memAlphaMeta. Checking other keys is useless as they are diminishing; the biggest return is on cutting down crawl time which can sometimes be 10s
 			const existingRole =
 				existingStData[roleData.person.id]?.totalityOfRoles.find((e) => e.id === roleData.id) || {};
 
@@ -112,9 +120,10 @@ for (const tvId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS]) {
 				(existingRole.memAlphaMeta && RECRAWL_EXISTING_CHARACTERS)
 			) {
 				// crawl it!
-				// on avg takes ~2.5 seconds
+				// on avg takes ~2.5 to ~8 seconds
 				console.log('actor ', roleData.person.original_name);
 				console.log('searching for ', roleData.media.character);
+				// TODO: this works but takes a hell of long time
 				// await getContent(
 				// 	`https://memory-alpha.fandom.com/wiki/${rfc3986EncodeURIComponent(
 				// 		roleData.media.character,
@@ -141,12 +150,6 @@ for (const tvId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS]) {
 				//process.exit();
 			}
 
-			// if (existingRole.memAlpha && RECRAWL_EXISTING_CHARACTERS) {
-			// console.log('hey this already exists!', existingRole);
-			// }
-
-			//			process.exit();
-
 			// we only care about a persons 'id' which remains fixed;
 			// the goal is to just keep building the compendium of characters an actor plays and key it to their real world id.
 			// this also avoids misnomers; such as given names and stage names being in conflict
@@ -159,40 +162,29 @@ for (const tvId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS]) {
 		}
 	}
 }
+console.timeEnd('Start of data fetch');
 
-// movies
-
-// data set
-fs.writeFileSync(
-	'./src/routes/stData.js',
-	`
+try {
+	// data set
+	fs.writeFileSync(
+		'./src/routes/stData.js',
+		`
 	// fetched: ${new Date().toJSON().slice(0, 10).replace(/-/g, '/')}
 	// total cast: ${castCount}
 	// total characters: ${playedCharacterCount}
-	// execution time ~ ${(Date.now() - start) / 1000}
+	// execution time ~ ${(Date.now() - start) / 1000}s
 	export const data = ${JSON.stringify(finalAggregateCredits)}`,
-	(err) => {
-		if (err) {
-			console.error(err);
-		}
-		console.timeEnd('Start of data fetch');
-		console.log('write success');
-		// file written successfully
-	},
-);
+	);
 
-// errata
-fs.writeFileSync(
-	'./errata/errata.js',
-	`
+	// errata
+	fs.writeFileSync(
+		'./errata/errata.js',
+		`
 	// fetched: ${new Date().toJSON().slice(0, 10).replace(/-/g, '/')}
 	export const errata = ${JSON.stringify(finalMissingWikiEntries)}`,
-	(err) => {
-		if (err) {
-			console.error(err);
-		}
-		console.timeEnd('Start of data fetch');
-		console.log('write success');
-		// file written successfully
-	},
-);
+	);
+} catch (e) {
+	console.error(e);
+} finally {
+	process.exit();
+}
