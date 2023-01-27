@@ -1,15 +1,16 @@
+/** A helper that fetches and squishes various canonical star trek shows into a format that's useful for this app. This is what I used to generate the stData.json */
+
 import fs from 'fs';
 import 'dotenv/config.js';
 import getHTML from 'html-get';
 
 import _metascraper from 'metascraper';
-//import title from 'metascraper-title';
 import image from 'metascraper-image';
 import desc from 'metascraper-description';
 import url from 'metascraper-url';
 import { data as existingStData } from './src/routes/stData.js';
 
-// WARNING: if true, the script will start the crawl process anew, which may about 7 hours to execution time
+// WARNING: if true, the script will start the crawl process anew, which may about 10+ hours of execution time
 const RECRAWL_EXISTING_CHARACTERS = false;
 
 const metascraper = _metascraper([image(), desc(), url()]);
@@ -33,8 +34,6 @@ const getContent = async (url) => {
 	promise.then(() => browserContext).then((browser) => browser.destroyContext());
 	return promise;
 };
-
-/** A helper that fetches and squishes various canonical star trek shows into a format that's useful for this app. This is what I used to generate the stData.json */
 
 const CANON_ST_TV_IDS = [
 	253, // tos
@@ -101,13 +100,13 @@ for (const mediaId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MO
 	// for now I am focusing only on cast, not crew (TODO: crew are important so figure this out later)
 	for (const castMembers of aggCreditData.cast) {
 		castCount += 1;
+		// the casting to array is done to account for movies, which don't have a roles array
 		for (const role of [...(castMembers?.roles ?? [castMembers])]) {
 			playedCharacterCount += 1;
 
 			const credRes = await fetch(SPECIFIC_CREDIT_EP(role.credit_id));
 			const roleData = await credRes.json();
 
-			console.log(roleData, role);
 			// to get character specific data I am pulling memory alpha. However, to avoid needless execution time (each crawl is about 2 seconds), first check whether the current role already exists in our data set, _and_ has a key called memAlphaMeta. Checking other keys is useless as they are diminishing; the biggest return is on cutting down crawl time which can sometimes be 10s
 			const existingRole =
 				existingStData[roleData.person.id]?.totalityOfRoles.find((e) => e.id === roleData.id) || {};
@@ -146,8 +145,6 @@ for (const mediaId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MO
 				// 	})
 				// 	.then(browserless.close);
 				//.then(process.exit);
-
-				//process.exit();
 			}
 
 			// we only care about a persons 'id' which remains fixed;
