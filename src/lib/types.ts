@@ -18,5 +18,18 @@ export type FilteredSearchResults = FilteredSearchResult[] | [];
 
 export interface FoundPersonOnStarTrek {
 	original_name: string;
-	totalityOfRoles: object[];
+	totalityOfRoles: Role[];
+}
+
+export interface Role {
+	credit_type: string;
+	department: string;
+	job: 'string';
+	media: {
+		character: string;
+		episodes: {
+			name: string;
+			overview: string;
+		}[];
+	};
 }
