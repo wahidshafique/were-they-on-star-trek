@@ -13,3 +13,6 @@ notes.txt
 # Local Netlify folder
 .netlify
 backups
+
+*.deb
+not

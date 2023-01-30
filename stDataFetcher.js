@@ -9,9 +9,11 @@ import image from 'metascraper-image';
 import desc from 'metascraper-description';
 import url from 'metascraper-url';
 import { data as existingStData } from './src/routes/stData.js';
+// these ranks present issues when sending string over to mem alpha so we need to strip them
+import ranksToStrip from './rank-abbr-to-strip.json' assert { type: 'json' };
 
 // WARNING: if true, the script will start the crawl process anew, which may about 10+ hours of execution time
-const RECRAWL_EXISTING_CHARACTERS = false;
+const RECRAWL_EXISTING_CHARACTERS = true;
 
 const metascraper = _metascraper([image(), desc(), url()]);
 /**
@@ -103,6 +105,7 @@ for (const mediaId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MO
 		// the casting to array is done to account for movies, which don't have a roles array
 		for (const role of [...(castMembers?.roles ?? [castMembers])]) {
 			playedCharacterCount += 1;
+			console.log('character count', playedCharacterCount);
 
 			const credRes = await fetch(SPECIFIC_CREDIT_EP(role.credit_id));
 			const roleData = await credRes.json();
@@ -118,32 +121,33 @@ for (const mediaId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MO
 				!existingRole?.memAlphaMeta ||
 				(existingRole.memAlphaMeta && RECRAWL_EXISTING_CHARACTERS)
 			) {
-				// crawl it!
+				// // crawl it!
 				// on avg takes ~2.5 to ~8 seconds
 				console.log('actor ', roleData.person.original_name);
 				console.log('searching for ', roleData.media.character);
+				console.log(ranksToStrip);
+				const rankMatchPattern = new RegExp(ranksToStrip.join('|'), 'gi');
 				// TODO: this works but takes a hell of long time
-				// await getContent(
-				// 	`https://memory-alpha.fandom.com/wiki/${rfc3986EncodeURIComponent(
-				// 		roleData.media.character,
-				// 	)}`,
-				// )
-				// 	.then(metascraper)
-				// 	.then((metadata) => {
-				// 		console.log(metadata);
-				// 		// the wiki accepts any garbage url happily, a '404' results in a site logo image as part of the meta data
-				// 		if (!metadata.image || metadata.image.includes('Site-logo.png')) {
-				// 			// it is exceedingly rare that a credited character does not show up in the fan wiki.
-				// 			console.log('Character not found ', roleData);
-				// 			finalMissingWikiEntries.push({
-				// 				actor: roleData.person.original_name,
-				// 				role: roleData.media.character,
-				// 			});
-				// 		} else {
-				// 			mergedRoleData.memAlphaMeta = metadata;
-				// 		}
-				// 	})
-				// 	.then(browserless.close);
+				await getContent(
+					`https://memory-alpha.fandom.com/wiki/${rfc3986EncodeURIComponent(
+						roleData.media.character.replace(rankMatchPattern, '').trim(),
+					)}`,
+				)
+					.then(metascraper)
+					.then((metadata) => {
+						// the wiki accepts any garbage url happily, a '404' results in a site logo image as part of the meta data
+						if (!metadata.image || metadata.image.includes('Site-logo.png')) {
+							// it is exceedingly rare that a credited character does not show up in the fan wiki.
+							console.log('Character not found ', roleData);
+							finalMissingWikiEntries.push({
+								actor: roleData.person.original_name,
+								role: roleData.media.character,
+							});
+						} else {
+							mergedRoleData.memAlphaMeta = metadata;
+						}
+					})
+					.then(browserless.close);
 				//.then(process.exit);
 			}
 
