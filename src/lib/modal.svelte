@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount, afterUpdate } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch('close');
@@ -13,15 +13,16 @@
 		window.scrollTo(0, 0);
 	});
 
-	$: {
+	const onScrollEvent = () => {
 		if (modal) {
 			const modalRect = modal.getBoundingClientRect();
+			console.log(modalRect.y + modalRect.height);
 			if (modalRect.y + modalRect.height <= 0) {
 				// out of view port
 				dispatch('close');
 			}
 		}
-	}
+	};
 
 	const handle_keydown = (e) => {
 		if (e.key === 'Escape') {
@@ -54,7 +55,7 @@
 	}
 </script>
 
-<svelte:window on:keydown={handle_keydown} />
+<svelte:window on:keydown={handle_keydown} on:scroll={onScrollEvent} />
 
 <div class="fixed top-0 left-0 w-full h-full z-50 bg-black" on:click={close} />
 

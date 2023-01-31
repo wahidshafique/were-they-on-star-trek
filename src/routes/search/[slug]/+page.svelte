@@ -2,13 +2,16 @@
 	import Logo from '$lib/logo.svelte';
 	import SingleActorPane from '$lib/singleActorPane.svelte';
 	import { currentSearchResult } from '$lib/stores';
-	import type { FoundPersonOnStarTrek } from '$lib/types';
+	import TvMoviePane from '$lib/tvMoviePane.svelte';
+	import type {
+		FoundPersonOnStarTrek,
+		FilteredSearchResult,
+		IntersectingPeopleOnStarTrek,
+	} from '$lib/types';
 
-	export let data: import('$lib/types').FilteredSearchResult & FoundPersonOnStarTrek;
+	export let data: FilteredSearchResult & FoundPersonOnStarTrek & IntersectingPeopleOnStarTrek;
 
-	let searchResult = { ...$currentSearchResult, ...data };
-
-	// console.log(resultHeadline, searchResult, searchResult.type);
+	$: searchResult = { ...$currentSearchResult, ...data };
 </script>
 
 <div class="isolate">
@@ -19,5 +22,7 @@
 	</nav>
 	{#if searchResult.type === 'person'}
 		<SingleActorPane {searchResult} />
+	{:else if searchResult.type === 'tv' || searchResult.type === 'movie'}
+		<TvMoviePane {searchResult} />
 	{/if}
 </div>

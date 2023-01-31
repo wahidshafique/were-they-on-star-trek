@@ -29,6 +29,31 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 		// when you search for a person, no need to fetch anything from api
 		// modify the data to create a custom 'headline'
 		return { type: mediaEntityEnum.person, ...foundPersonData, ...stData[params.slug] };
+	} else if (url.searchParams.has(mediaEntityEnum.tv)) {
+		let foundTvData = {};
+		const tvRes = await fetch(
+			`https://api.themoviedb.org/3/tv/${params.slug}?api_key=${API_KEY}&append_to_response=aggregate_credits`,
+		);
+		foundTvData = await tvRes.json();
+		console.log(foundTvData);
+		const totalityOfMatchingActors = foundTvData.aggregate_credits.cast.reduce((acc, actor) => {
+			console.log(actor);
+			const starTrekCastCredit = stData[actor.id];
+			if (starTrekCastCredit) {
+				const matched = {
+					queriedActorData: actor,
+					...starTrekCastCredit,
+				};
+				acc.push(matched);
+			}
+			return acc;
+		}, []);
+
+		return {
+			type: mediaEntityEnum.tv,
+			original_name: foundTvData.original_name,
+			totalityOfMatchingActors,
+		};
 	}
 
 	// const multiSearchRes = await fetch("/multisearch")

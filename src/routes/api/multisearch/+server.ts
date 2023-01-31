@@ -17,7 +17,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	const filteredResults: FilteredSearchResults = Array();
 
 	console.log('Search Request: ', url.searchParams.get('query'));
-	// console.log(results);
 	if (results) {
 		for (const {
 			backdrop_path,

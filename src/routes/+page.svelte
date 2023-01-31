@@ -1,12 +1,13 @@
 <script lang="ts">
 	import tmdbLogo from '$lib/assets/tmdb-attr.svg';
 	import SearchPreviewPane from '$lib/searchPreviewPane.svelte';
+	import type { FilteredSearchResults } from '$lib/types';
 
 	import debounce from 'lodash.debounce';
 	import Logo from '../lib/logo.svelte';
 
 	let searchQuery: string;
-	let searchQueryResults;
+	let searchQueryResults: FilteredSearchResults;
 
 	const handleInput = debounce((e: Event) => {
 		const target = e.target as HTMLInputElement;
@@ -22,7 +23,7 @@
 					return [];
 				});
 		}
-	}, 500);
+	}, 1000);
 </script>
 
 <div
@@ -54,7 +55,7 @@
 			</div>
 		</form>
 		<div class="flex flex-row justify-between">
-			<a href="https://www.themoviedb.org/" target="_blank">
+			<a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
 				<img src={tmdbLogo} alt="The Movie Database" srcset="" width="100px" />
 			</a>
 			<span class="text-xs">{searchQueryResults?.length ?? 0} Result(s)</span>

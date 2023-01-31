@@ -1,14 +1,11 @@
 <script lang="ts">
 	import Modal from './modal.svelte';
-	import { goto } from '$app/navigation';
-	import { currentSearchResult } from '$lib/stores';
 	import notFoundImage from '$lib/assets/404-tribble.jpeg';
-	import searchResultCookie from './helpers/searchResultCookie';
-	import type { FilteredSearchResult, FoundPersonOnStarTrek, Role } from './types';
+	import type { Role } from './types';
 	export let role: Role;
-	let showModal = false;
+	let showDescriptionModal = false;
 
-	console.log(role);
+	console.log('Role', role);
 </script>
 
 <div class="group px-5 text-center">
@@ -23,17 +20,18 @@
 		/>
 	</div>
 	<h3 class="mt-2 text-md font-bold">
-		{role.media.original_name || role.media.original_title} - {role.media.character}
+		{role.media.media_type === 'tv' ? role.media.original_name : role.media.original_title} - {role
+			.media.character}
 	</h3>
 	<button
 		on:click={() => {
-			showModal = true;
+			showDescriptionModal = true;
 		}}
 		class="bg-transparent text-white hover:bg-gray-100 hover:text-gray-800 font-semibold  py-1 px-2 my-2 border border-gray-400 rounded shadow"
 		>Show Details</button
 	>
-	{#if showModal}
-		<Modal on:close={() => (showModal = false)}>
+	{#if showDescriptionModal}
+		<Modal on:close={() => (showDescriptionModal = false)}>
 			<h2 slot="header" class="my-1">
 				<small><em>{role.media.character}</em></small>
 			</h2>
@@ -43,6 +41,7 @@
 					<p class="mb-3">
 						{role.memAlphaMeta?.description}<a
 							target="_blank"
+							rel="noreferrer"
 							class="underline cursor-pointer"
 							href={role?.memAlphaMeta?.url}>Read More</a
 						>
@@ -52,7 +51,7 @@
 				{#if role.media.media_type === 'movie'}
 					<p>{role.media.original_title} ✺ {role.media.release_date}</p>
 					<p>{role.media.overview}</p>
-				{:else}
+				{:else if role.media.media_type === 'tv'}
 					{#each role.media.episodes as episode}
 						<div class="my-3">
 							<p class="font-bold">{episode.name}</p>
@@ -64,6 +63,4 @@
 			</div>
 		</Modal>
 	{/if}
-
-	<!-- <p class="mt-1 mb-3 text-xs font-medium">{searchResult.type}</p> -->
 </div>

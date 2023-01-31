@@ -1,6 +1,5 @@
 <script lang="ts">
 	// for when you are presented with results from a single actor search
-
 	import SingleActorCard from './singleActorCard.svelte';
 	import type { FilteredSearchResult, FoundPersonOnStarTrek } from './types';
 
