@@ -8,12 +8,12 @@ import _metascraper from 'metascraper';
 import image from 'metascraper-image';
 import desc from 'metascraper-description';
 import url from 'metascraper-url';
-import { data as existingStData } from './src/routes/stData.js';
+import { data as existingStData } from '../src/routes/stData.js';
 // these ranks present issues when sending string over to mem alpha so we need to strip them
 import ranksToStrip from './rank-abbr-to-strip.json' assert { type: 'json' };
 
 // WARNING: if true, the script will start the crawl process anew, which may about 10+ hours of execution time
-const RECRAWL_EXISTING_CHARACTERS = true;
+const RECRAWL_EXISTING_CHARACTERS = false;
 
 const metascraper = _metascraper([image(), desc(), url()]);
 /**

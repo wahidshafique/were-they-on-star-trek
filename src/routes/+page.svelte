@@ -31,8 +31,8 @@
 	<div class="w-full max-w-md space-y-3">
 		<div>
 			<Logo />
-			<h2 class="mt-6 text-center text-3xl font-bold  dark:text-white">Were They on Star Trek?</h2>
-			<p class="mt-6 text-center dark:text-white">
+			<h2 class="mt-6 text-center text-3xl font-bold">Were They on Star Trek?</h2>
+			<p class="mt-6 text-center">
 				Search for any TV Show or Actor, and you'll see whether there are any <span
 					title="The Star Trek canon includes the original series, seven spin-off television series, three animated series, and thirteen films."
 					class="underline decoration-dotted">connections</span
@@ -54,7 +54,9 @@
 			</div>
 		</form>
 		<div class="flex flex-row justify-between">
-			<img src={tmdbLogo} alt="The Movie Database" srcset="" width="100px" />
+			<a href="https://www.themoviedb.org/" target="_blank">
+				<img src={tmdbLogo} alt="The Movie Database" srcset="" width="100px" />
+			</a>
 			<span class="text-xs">{searchQueryResults?.length ?? 0} Result(s)</span>
 		</div>
 	</div>

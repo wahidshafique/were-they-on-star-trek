@@ -7,13 +7,12 @@
 	export let data: import('$lib/types').FilteredSearchResult & FoundPersonOnStarTrek;
 
 	let searchResult = { ...$currentSearchResult, ...data };
-	let resultHeadline = '';
 
 	// console.log(resultHeadline, searchResult, searchResult.type);
 </script>
 
 <div class="isolate">
-	<nav class="flex h-9 items-center justify-between m-4" aria-label="Global">
+	<nav class="flex h-9 items-center justify-center pt-10" aria-label="Global">
 		<div class="flex lg:min-w-0 lg:flex-1" aria-label="Global">
 			<Logo />
 		</div>

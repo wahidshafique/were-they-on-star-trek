@@ -5,14 +5,14 @@
 </script>
 
 <audio src={commBadgeSound} bind:this={commBadgeChirp} />
-<a href="/" class="-m-1.5 p-1.5">
+<a href="/">
 	<span class="sr-only">Home</span>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<img
 		on:click={() => {
 			commBadgeChirp.play();
 		}}
-		class="dark:invert mx-auto h-12 w-auto"
+		class="mx-auto h-12 w-auto invert"
 		src={stLogo}
 		alt="Star Trek Logo"
 	/>

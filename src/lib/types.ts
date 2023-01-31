@@ -32,4 +32,10 @@ export interface Role {
 			overview: string;
 		}[];
 	};
+	/** crawled data */
+	memAlphaMeta?: {
+		image: string;
+		description: string;
+		url: string;
+	};
 }

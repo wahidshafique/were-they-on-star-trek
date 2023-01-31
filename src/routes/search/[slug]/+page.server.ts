@@ -26,10 +26,8 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			);
 			foundPersonData = await personRes.json();
 		}
-		// const personRes = await fetch("/person")
 		// when you search for a person, no need to fetch anything from api
 		// modify the data to create a custom 'headline'
-
 		return { type: mediaEntityEnum.person, ...foundPersonData, ...stData[params.slug] };
 	}
 

@@ -26,6 +26,18 @@ The only items it's comparing against are [canonical](https://en.wikipedia.org/w
 
 > The Star Trek canon includes the original series, seven spin-off television series, three animated series, and thirteen films.
 
+It uses TMDB as well as [Memory Alpha](https://www.themoviedb.org/bible/general#59f792a29251413e93000002) to source data.
+
 ## Random Musings
 
-It seems like sometimes the entire appearance list of an actor is not present. For example, the entry for Jeffrey Combs in DS9 gives only `Brunt` or `Weyoun / Officer Mulkahey`, but never just `Weyoun`. The latter character appears in _many_ episodes of DS9, but the API is only counting...limited/hybrid appearances. Not sure what this is the case..
+It seems like sometimes the entire appearance list of an actor is not present. For example, the entry for Jeffrey Combs in DS9 gives only `Brunt` or `Weyoun / Officer Mulkahey`, but never just `Weyoun`. The latter character appears in _many_ episodes of DS9, but the API is only counting...limited/hybrid appearances. Not sure why this is the case..
+
+As it turns out, the TMDB database itself was incomplete on certain appearances. It relies on [user](https://www.themoviedb.org/bible/general#59f792a29251413e93000002) lead corrections and entries; so any registered member is capable of making changes. As this project goes on, I suppose it may lead to a richer tmdb database compendium of star trek entries; mirroring data found on alpha prime.
+
+Also after going with the angle of, lets crawl MemoryAlpha and fill out character data that way (which takes like 9 hours by the way); I discovered that the site has a [db dump](https://memory-alpha.fandom.com/wiki/Memory_Alpha:Database_download). _However_ it does not contain direct links to images, therefore its largely useless since I can't decipher the standard format of all the stuff that comes before the `fileName` that might be listed in the aforementioned xml dump.
+
+See the url here: `https://static.wikia.nocookie.net/memoryalpha/images/9/9a/Q%2C_2364.jpg/revision/latest?cb=20220307152252&path-prefix=en`
+
+compared to `https://static.wikia.nocookie.net/memoryalpha/images/3/38/Borg-symbol.jpg/revision/latest?cb=20091016022015&path-prefix=en`
+
+While we have the `fileName` in the xml dump, we don't know what folder it can be in, `9/9a` etc. So the strategy of crawling stands for now. The only things to look out for missing characters or non-canonical names.
