@@ -9,7 +9,6 @@
 		searchResult?.totalityOfRoles ? '' : 'not'
 	} on Star Trek!`;
 	let showActorDetailsModal = false;
-	console.log(searchResult);
 </script>
 
 <div

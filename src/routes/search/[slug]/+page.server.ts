@@ -4,6 +4,18 @@ import { API_KEY } from '$env/static/private';
 import searchResultCookie from '$lib/helpers/searchResultCookie';
 import type { PageServerLoad } from './$types';
 
+const castReducer = (acc, actor) => {
+	const starTrekCastCredit = stData[actor.id];
+	if (starTrekCastCredit) {
+		const matched = {
+			queriedActorData: actor,
+			...starTrekCastCredit,
+		};
+		acc.push(matched);
+	}
+	return acc;
+};
+
 export const load: PageServerLoad = async ({ params, error, fetch, cookies, url }) => {
 	if (!params.slug) {
 		throw error(404, {
@@ -35,37 +47,24 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			`https://api.themoviedb.org/3/tv/${params.slug}?api_key=${API_KEY}&append_to_response=aggregate_credits`,
 		);
 		foundTvData = await tvRes.json();
-		const totalityOfMatchingActors = foundTvData.aggregate_credits.cast.reduce((acc, actor) => {
-			const starTrekCastCredit = stData[actor.id];
-			if (starTrekCastCredit) {
-				const matched = {
-					queriedActorData: actor,
-					...starTrekCastCredit,
-				};
-				acc.push(matched);
-			}
-			return acc;
-		}, []);
+		const totalityOfMatchingActors = foundTvData.aggregate_credits.cast.reduce(castReducer, []);
 
 		return {
 			type: mediaEntityEnum.tv,
 			original_name: foundTvData.original_name,
 			totalityOfMatchingActors,
 		};
+	} else if (url.searchParams.has(mediaEntityEnum.movie)) {
+		let foundMovieData = {};
+		const movieRes = await fetch(
+			`https://api.themoviedb.org/3/movie/${params.slug}?api_key=${API_KEY}&append_to_response=credits`,
+		);
+		foundMovieData = await movieRes.json();
+		const totalityOfMatchingActors = foundMovieData.credits.cast.reduce(castReducer, []);
+		return {
+			type: mediaEntityEnum.tv,
+			original_name: foundMovieData.original_title,
+			totalityOfMatchingActors,
+		};
 	}
-
-	// const multiSearchRes = await fetch("/multisearch")
-
-	// const multiSearchRes = await fetch(`/api/multisearch?query=${encodeURI(params.slug)}`);
-
-	// 		`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${url.searchParams.get(
-	// // const multiSearchRes = await fetch(
-	// // 	`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURI(params.slug)}`,
-	// // );
-	// const multiSearchData = await multiSearchRes.json();
-	// return multiSearchData;
-	// return {
-	// 	// matching first entry as results are sorted by popularity and fuzzy match, usually first one is good
-	// 	intersection: stData[2057224],
-	// };
 };

@@ -18,7 +18,6 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	console.info('Search Request: ', url.searchParams.get('query'));
 	if (results) {
-		console.log(results);
 		for (const {
 			backdrop_path,
 			profile_path,

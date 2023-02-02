@@ -36,11 +36,15 @@
 								// biography: matchingActorData.queriedActorData.biography,
 							}}
 						/>
-						<p>
-							Played {matchingActorData.queriedActorData.roles.map(
-								(r) => `${r.character} (${r.episode_count} episodes)`,
-							)}
-						</p>
+						{#if matchingActorData.queriedActorData.roles}
+							<p>
+								Played {matchingActorData.queriedActorData.roles.map(
+									(r) => `${r.character} (${r.episode_count} episodes)`,
+								)}
+							</p>
+						{:else if matchingActorData.queriedActorData.character}
+							<p>Played {matchingActorData.queriedActorData.character}</p>
+						{/if}
 					</div>
 				</div>
 				{#if matchingActorData.totalityOfRoles}

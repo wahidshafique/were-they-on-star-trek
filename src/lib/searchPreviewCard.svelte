@@ -17,16 +17,10 @@
 	};
 </script>
 
-<button disabled={result.type === 'movie'} on:click={handleClick} class="group px-10">
+<button on:click={handleClick} class="group px-10">
 	<div
 		class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8 relative"
 	>
-		<!-- TODO: add this functionality for movies later -->
-		{#if result.type === 'movie'}
-			<div
-				class="w-full h-full before:content-['Movies_intersection_coming_soon!'] text-slate-900 absolute bg-slate-200 isolate"
-			/>
-		{/if}
 		<img
 			alt={`image of ${result.name}`}
 			src={result.image || notFoundImage}

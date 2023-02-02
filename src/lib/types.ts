@@ -34,6 +34,8 @@ interface ServerActorData {
 	original_name: string;
 	id: string;
 	roles: Role[];
+	/** if its a movie, then we get simply character */
+	character?: string;
 }
 
 export interface IntersectingPeopleOnStarTrek {
