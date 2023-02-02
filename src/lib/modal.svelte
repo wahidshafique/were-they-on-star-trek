@@ -1,24 +1,23 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher, onDestroy, onMount, afterUpdate } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch('close');
-	let modal;
+	let modal: HTMLDivElement;
 
 	// to get entire page to scroll top
 	window.scrollTo(0, 0);
 
 	onMount(() => {
-		// to get inner modal scroll top (if applicable)
+		// to get inner modal scroll top (if applicable, like if we have a lot of entries)
 		window.scrollTo(0, 0);
 	});
 
 	const onScrollEvent = () => {
 		if (modal) {
 			const modalRect = modal.getBoundingClientRect();
-			console.log(modalRect.y + modalRect.height);
 			if (modalRect.y + modalRect.height <= 0) {
-				// out of view port
+				// out of view port, you've scrolled past the modal on a particularly long page
 				dispatch('close');
 			}
 		}

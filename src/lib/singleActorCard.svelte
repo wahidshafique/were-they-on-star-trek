@@ -3,9 +3,8 @@
 	import notFoundImage from '$lib/assets/404-tribble.jpeg';
 	import type { Role } from './types';
 	export let role: Role;
+	/** reveals extra deets like when and where they starred, plus character info*/
 	let showDescriptionModal = false;
-
-	console.log('Role', role);
 </script>
 
 <div class="group px-5 text-center">
@@ -31,7 +30,11 @@
 		>Show Details</button
 	>
 	{#if showDescriptionModal}
-		<Modal on:close={() => (showDescriptionModal = false)}>
+		<Modal
+			on:close={() => {
+				showDescriptionModal = false;
+			}}
+		>
 			<h2 slot="header" class="my-1">
 				<small><em>{role.media.character}</em></small>
 			</h2>

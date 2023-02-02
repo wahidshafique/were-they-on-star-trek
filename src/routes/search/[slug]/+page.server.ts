@@ -35,9 +35,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			`https://api.themoviedb.org/3/tv/${params.slug}?api_key=${API_KEY}&append_to_response=aggregate_credits`,
 		);
 		foundTvData = await tvRes.json();
-		console.log(foundTvData);
 		const totalityOfMatchingActors = foundTvData.aggregate_credits.cast.reduce((acc, actor) => {
-			console.log(actor);
 			const starTrekCastCredit = stData[actor.id];
 			if (starTrekCastCredit) {
 				const matched = {

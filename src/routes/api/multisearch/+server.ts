@@ -16,14 +16,18 @@ export const GET: RequestHandler = async ({ url }) => {
 	// eslint-disable-next-line @typescript-eslint/no-array-constructor
 	const filteredResults: FilteredSearchResults = Array();
 
-	console.log('Search Request: ', url.searchParams.get('query'));
+	console.info('Search Request: ', url.searchParams.get('query'));
 	if (results) {
+		console.log(results);
 		for (const {
 			backdrop_path,
 			profile_path,
 			poster_path,
 			original_name,
 			original_title,
+			birthday,
+			deathday,
+			biography,
 			media_type,
 			name,
 			id,
@@ -31,6 +35,9 @@ export const GET: RequestHandler = async ({ url }) => {
 			const imgPath = backdrop_path || profile_path || poster_path;
 			const image = imgPath ? IMG_THUMB_BG_URL + imgPath : null;
 			filteredResults.push({
+				birthday,
+				deathday,
+				biography,
 				name: name || original_name || original_title,
 				// use config api, the url is not pregiven due to keeping it 'light' according to docs
 				image,

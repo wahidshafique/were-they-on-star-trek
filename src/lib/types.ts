@@ -5,6 +5,10 @@ export enum mediaEntityEnum {
 }
 
 type mediaEntityType = keyof typeof mediaEntityEnum;
+
+/** This is a user defined type that comes from our server. It melds together people/tv/movies
+ * into a format used only for the search cards
+ */
 export interface FilteredSearchResult {
 	image: string | null;
 	/** normalized for both movies and tv */
@@ -12,6 +16,10 @@ export interface FilteredSearchResult {
 	type: mediaEntityType;
 	/** used for subsequent searching */
 	id: string;
+	/** person specific, only when called via person search (not multi) */
+	birthday?: string;
+	deathday?: string;
+	biography?: string;
 }
 
 export type FilteredSearchResults = FilteredSearchResult[] | [];
@@ -21,11 +29,18 @@ export interface FoundPersonOnStarTrek {
 	totalityOfRoles?: Role[];
 }
 
+interface ServerActorData {
+	profile_path: string;
+	original_name: string;
+	id: string;
+	roles: Role[];
+}
+
 export interface IntersectingPeopleOnStarTrek {
 	original_name: string;
 	totalityOfMatchingActors?: {
-		queriedActor: FilteredSearchResult;
-		totalityOfStarTrekRoles?: Role[];
+		queriedActorData: ServerActorData;
+		totalityOfRoles?: Role[];
 	}[];
 }
 
@@ -33,6 +48,8 @@ export interface Role {
 	credit_type: string;
 	department: string;
 	media: TvMedia | MovieMedia;
+	character?: string;
+	episode_count?: string;
 	/** crawled data */
 	memAlphaMeta?: {
 		image: string;

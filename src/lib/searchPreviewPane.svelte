@@ -16,6 +16,7 @@
 					<SearchPreviewCard {result} />
 				{/each}
 			{:else}
+				<!-- TODO: maybe show a random celeb here -->
 				<img src={idleGif} alt="Janeway waiting" />
 			{/if}
 		</div>

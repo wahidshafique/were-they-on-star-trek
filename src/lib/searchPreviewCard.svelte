@@ -5,11 +5,11 @@
 	import notFoundImage from '$lib/assets/404-tribble.jpeg';
 	import type { FilteredSearchResult } from './types';
 	export let result: FilteredSearchResult;
-	// remove the extra type detail visually
+	// remove the extra type detail visually, sometimes this card appears in other contexts where type is not needed
 	export let hideMediaType: boolean = false;
 
 	const handleClick = () => {
-		// store the details of our results so we do not need to make another request
+		// store the details of our results so we do not need to make another request. Only relevant when you search for people
 		currentSearchResult.set(result);
 		/** cookie is just for the server to know that we are in sveltekit client mode and have store data as we navigate forward*/
 		searchResultCookie.set(true);
@@ -28,6 +28,7 @@
 			/>
 		{/if}
 		<img
+			alt={`image of ${result.name}`}
 			src={result.image || notFoundImage}
 			class="h-full w-full object-cover object-center group-hover:opacity-75"
 		/>
