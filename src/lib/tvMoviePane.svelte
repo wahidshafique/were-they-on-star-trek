@@ -3,11 +3,24 @@
 	import SearchPreviewCard from './searchPreviewCard.svelte';
 	import SingleActorCard from './singleActorCard.svelte';
 	import type { IntersectingPeopleOnStarTrek } from './types';
+	import LongListWrapper from './longListWrapper.svelte';
+	import Confetti from './confetti.svelte';
+	import { onMount } from 'svelte';
 
 	// this component shows you the results; the actors roles in star trek listed out
 	export let searchResult: IntersectingPeopleOnStarTrek;
 	const resultHeadline = `${searchResult.original_name} has ${searchResult?.totalityOfMatchingActors?.length} actors that were once on Star Trek`;
 	const { totalityOfMatchingActors = [] } = searchResult;
+	// ie tried to be clever
+	const isLongList = totalityOfMatchingActors?.length > 150;
+
+	// for the confetti easter egg
+	let showConfetti = isLongList;
+	onMount(() => {
+		setTimeout(() => {
+			showConfetti = false;
+		}, 5000);
+	});
 </script>
 
 <div
@@ -15,9 +28,12 @@
 >
 	<h2 class="text-center text-3xl font-bold">{resultHeadline}</h2>
 
+	{#if showConfetti}
+		<Confetti />
+	{/if}
 	{#if totalityOfMatchingActors?.length > 0}
-		{#each totalityOfMatchingActors as matchingActorData, i}
-			<div class="border-2 mt-8">
+		<LongListWrapper {isLongList} arrayToIterate={totalityOfMatchingActors} let:matchingActorData>
+			<div class="border-2 mt-8 max-w-[1080px]">
 				<div class="text-center mt-4">
 					<div class="max-w-[300px] m-auto">
 						<SearchPreviewCard
@@ -39,7 +55,7 @@
 						{#if matchingActorData.queriedActorData.roles}
 							<p>
 								Played {matchingActorData.queriedActorData.roles.map(
-									(r) => `${r.character} (${r.episode_count} episodes)`,
+									(r) => ` ${r.character} (${r.episode_count} episodes)`,
 								)}
 							</p>
 						{:else if matchingActorData.queriedActorData.character}
@@ -58,6 +74,6 @@
 					</div>
 				{/if}
 			</div>
-		{/each}
+		</LongListWrapper>
 	{/if}
 </div>
