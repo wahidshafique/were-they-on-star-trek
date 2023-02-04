@@ -62,4 +62,18 @@
 		</div>
 	</div>
 	<SearchPreviewPane searchResults={searchQueryResults} />
+
+	<footer
+		class="m-2 p-2 rounded-lg shadow md:flex md:items-center md:justify-between bg-sciencesUniform"
+	>
+		<span class="text-xs sm:text-center text-gray-400"
+			>Made with <span role="img" aria-label="vulcan salute">🖖</span> by
+			<a
+				target="_blank"
+				rel="noreferrer"
+				href="https://github.com/wahidshafique/were-they-on-star-trek"
+				class="hover:underline">wahidshafique</a
+			>
+		</span>
+	</footer>
 </div>

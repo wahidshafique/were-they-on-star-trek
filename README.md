@@ -28,6 +28,26 @@ The only items it's comparing against are [canonical](https://en.wikipedia.org/w
 
 It uses TMDB as well as [Memory Alpha](https://www.themoviedb.org/bible/general#59f792a29251413e93000002) to source data.
 
+## Popularity Score
+
+I use Supabase, so use a `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` to aggregate what a user searches.
+
+The first page displays a list of popular searches. These are added to a Supabase and are only ever upserted, so after an initial entry is created, any subsequent hits increases a counter. Everything is anonymized, and uses a simple [rpc](https://supabase.com/docs/reference/javascript/rpc)
+
+```
+BEGIN
+    INSERT INTO popular_searches(media_id, name)
+    VALUES (media_id_to_upsert, name_to_upsert)
+    ON CONFLICT (media_id)
+    DO
+        UPDATE SET hits = popular_searches.hits + 1;
+END
+```
+
+"Partial" searches are never honored, only when a user clicks into a media entity (like a tv show or movie), does the database get updated.
+
+The list of displayed popular items is updated on `build` periodically, as having it be real time is a bit of an overkill at this point.
+
 ## Random Musings
 
 It seems like sometimes the entire appearance list of an actor is not present. For example, the entry for Jeffrey Combs in DS9 gives only `Brunt` or `Weyoun / Officer Mulkahey`, but never just `Weyoun`. The latter character appears in _many_ episodes of DS9, but the API is only counting...limited/hybrid appearances. Not sure why this is the case..

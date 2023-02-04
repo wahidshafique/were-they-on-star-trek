@@ -39,6 +39,7 @@
 	"type": "module",
 	"dependencies": {
 		"@netlify/functions": "^1.4.0",
+		"@supabase/supabase-js": "^2.7.0",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"browserless": "^9.8.0",
 		"dotenv": "^16.0.3",
