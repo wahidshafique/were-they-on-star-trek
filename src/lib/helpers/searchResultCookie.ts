@@ -1,9 +1,10 @@
 import { browser } from '$app/environment';
+import type { FilteredSearchResult } from '$lib/types';
 
 const COOKIE_NAME = 'selectedResult';
-const set = (e: boolean) => {
+const set = (e: FilteredSearchResult) => {
 	if (browser) {
-		window.document.cookie = `${COOKIE_NAME}=${e.toString()};path=/search`;
+		window.document.cookie = `${COOKIE_NAME}=${JSON.stringify(e)};path=/search`;
 	}
 };
 

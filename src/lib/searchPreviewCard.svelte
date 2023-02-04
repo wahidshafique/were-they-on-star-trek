@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { currentSearchResult } from '$lib/stores';
 	import searchResultCookie from './helpers/searchResultCookie';
 	import notFoundImage from '$lib/assets/404-tribble.jpeg';
 	import type { FilteredSearchResult } from './types';
@@ -10,9 +9,8 @@
 
 	const handleClick = () => {
 		// store the details of our results so we do not need to make another request. Only relevant when you search for people
-		currentSearchResult.set(result);
 		/** cookie is just for the server to know that we are in sveltekit client mode and have store data as we navigate forward*/
-		searchResultCookie.set(true);
+		searchResultCookie.set(result);
 		goto('/search/' + result.id + `?${result.type}`);
 	};
 </script>

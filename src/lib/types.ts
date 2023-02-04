@@ -24,12 +24,11 @@ export interface FilteredSearchResult {
 
 export type FilteredSearchResults = FilteredSearchResult[] | [];
 
-export interface FoundPersonOnStarTrek {
-	original_name: string;
+export interface FoundPersonOnStarTrek extends FilteredSearchResult {
 	totalityOfRoles?: Role[];
 }
 
-interface ServerActorData {
+interface ServerActorData extends FilteredSearchResult {
 	profile_path: string;
 	original_name: string;
 	id: string;
@@ -38,7 +37,7 @@ interface ServerActorData {
 	character?: string;
 }
 
-export interface IntersectingPeopleOnStarTrek {
+export interface IntersectingPeopleOnStarTrek extends FilteredSearchResult {
 	original_name: string;
 	totalityOfMatchingActors?: {
 		queriedActorData: ServerActorData;

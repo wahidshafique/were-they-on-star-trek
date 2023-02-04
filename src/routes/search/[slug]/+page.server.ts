@@ -5,6 +5,10 @@ import searchResultCookie from '$lib/helpers/searchResultCookie';
 import type { PageServerLoad } from './$types';
 import { createClient } from '@supabase/supabase-js';
 
+const IMG_THUMB_BG_URL = `https://image.tmdb.org/t/p/w200/`;
+
+const makeFullImageUrl = (e) => (e ? IMG_THUMB_BG_URL + e : null);
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 const castReducer = (acc, actor) => {
@@ -27,12 +31,8 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 	}
 	// check if we don't already have results in our store, the cookie is just a bool flag
 	const browserHasDataAlready = cookies.get(searchResultCookie.cookieName);
-	if (browserHasDataAlready) {
-		// said cookie is deleted here so on refresh of the current page, we get newer data
-		cookies.delete(searchResultCookie.cookieName);
-	}
 
-	let mediaEntityDataToStore;
+	let mediaEntityDataToReturn;
 
 	if (url.searchParams.has(mediaEntityEnum.person)) {
 		let foundPersonData = {};
@@ -41,12 +41,24 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			const personRes = await fetch(
 				`https://api.themoviedb.org/3/person/${params.slug}?api_key=${API_KEY}`,
 			);
-			foundPersonData = await personRes.json();
+			const tmpPersonData = await personRes.json();
+			if (tmpPersonData?.success && tmpPersonData.success === false) {
+				return;
+			}
+			foundPersonData = {
+				name: tmpPersonData.name,
+				image: makeFullImageUrl(tmpPersonData.profile_path),
+				type: mediaEntityEnum.person,
+			};
+		} else {
+			foundPersonData = JSON.parse(browserHasDataAlready);
+			// said cookie is deleted here so on refresh of the current page, we get newer data
+			cookies.delete(searchResultCookie.cookieName);
 		}
 		// when you search for a person, no need to fetch anything from api
 		// modify the data to create a custom 'headline'
-		mediaEntityDataToStore = {
-			type: mediaEntityEnum.person,
+		mediaEntityDataToReturn = {
+			id: params.slug,
 			...foundPersonData,
 			...stData[params.slug],
 		};
@@ -56,11 +68,15 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			`https://api.themoviedb.org/3/tv/${params.slug}?api_key=${API_KEY}&append_to_response=aggregate_credits`,
 		);
 		foundTvData = await tvRes.json();
+		if (foundTvData?.success && foundTvData.success === false) {
+			return;
+		}
 		const totalityOfMatchingActors = foundTvData.aggregate_credits.cast.reduce(castReducer, []);
-
-		mediaEntityDataToStore = {
+		mediaEntityDataToReturn = {
+			id: params.slug,
+			name: foundTvData.original_name,
+			image: makeFullImageUrl(foundTvData.backdrop_path),
 			type: mediaEntityEnum.tv,
-			original_name: foundTvData.original_name,
 			totalityOfMatchingActors,
 		};
 	} else if (url.searchParams.has(mediaEntityEnum.movie)) {
@@ -69,10 +85,15 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			`https://api.themoviedb.org/3/movie/${params.slug}?api_key=${API_KEY}&append_to_response=credits`,
 		);
 		foundMovieData = await movieRes.json();
+		if (foundMovieData.success && fundMfoundMovieData.success === false) {
+			return;
+		}
 		const totalityOfMatchingActors = foundMovieData.credits.cast.reduce(castReducer, []);
-		mediaEntityDataToStore = {
-			type: mediaEntityEnum.tv,
-			original_name: foundMovieData.original_title,
+		mediaEntityDataToReturn = {
+			id: params.slug,
+			name: foundMovieData.original_title,
+			image: makeFullImageUrl(foundMovieData.poster_path),
+			type: mediaEntityEnum.movie,
 			totalityOfMatchingActors,
 		};
 	}
@@ -80,7 +101,10 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 	// later on the id's are digested by a prebuild popularity checker
 	await supabase.rpc('upsertPopular', {
 		media_id_to_upsert: params.slug,
+		name_to_upsert: mediaEntityDataToReturn.name,
+		type_to_upsert: mediaEntityDataToReturn.type,
+		image_to_upsert: mediaEntityDataToReturn.image,
 	});
 
-	return mediaEntityDataToStore;
+	return mediaEntityDataToReturn;
 };

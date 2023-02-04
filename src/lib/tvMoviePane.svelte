@@ -9,7 +9,7 @@
 
 	// this component shows you the results; the actors roles in star trek listed out
 	export let searchResult: IntersectingPeopleOnStarTrek;
-	const resultHeadline = `${searchResult.original_name} has ${searchResult?.totalityOfMatchingActors?.length} actors that were once on Star Trek`;
+	const resultHeadline = `${searchResult.name} has ${searchResult?.totalityOfMatchingActors?.length} actors that were once on Star Trek`;
 	const { totalityOfMatchingActors = [] } = searchResult;
 	// ie tried to be clever
 	const isLongList = totalityOfMatchingActors?.length > 150;

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/logo.svelte';
 	import SingleActorPane from '$lib/singleActorPane.svelte';
-	import { currentSearchResult } from '$lib/stores';
 	import TvMoviePane from '$lib/tvMoviePane.svelte';
 	import type {
 		FoundPersonOnStarTrek,
@@ -10,8 +9,7 @@
 	} from '$lib/types';
 
 	export let data: FilteredSearchResult & FoundPersonOnStarTrek & IntersectingPeopleOnStarTrek;
-
-	$: searchResult = { ...$currentSearchResult, ...data };
+	$: searchResult = { ...data };
 </script>
 
 <div class="isolate">
