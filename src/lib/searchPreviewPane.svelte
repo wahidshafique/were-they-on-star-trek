@@ -9,7 +9,7 @@
 
 <div class="border-2 mt-5">
 	{#if !searchResults.length}
-		<p class="text-center pt-2 font-bold">Top Searches</p>
+		<p class="text-center mt-3 font-bold">Top Searches</p>
 	{/if}
 	<div class="mx-auto max-w-2xl py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
 		<h2 class="sr-only">Search Results</h2>
