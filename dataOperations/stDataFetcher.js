@@ -1,7 +1,7 @@
 /** A helper that fetches and squishes various canonical star trek shows into a format that's useful for this app. This is what I used to generate the stData.json */
 
 import fs from 'fs';
-import 'dotenv/config.js';
+import { config } from 'dotenv';
 import getHTML from 'html-get';
 
 import _metascraper from 'metascraper';
@@ -9,6 +9,8 @@ import image from 'metascraper-image';
 import desc from 'metascraper-description';
 import url from 'metascraper-url';
 import { data as existingStData } from '../src/routes/stData.js';
+
+config({ path: __dirname + '../.env' });
 // these ranks present issues when sending string over to mem alpha so we need to strip them
 import ranksToStrip from './rank-abbr-to-strip.json' assert { type: 'json' };
 
@@ -168,7 +170,7 @@ console.timeEnd('Start of data fetch');
 try {
 	// data set
 	fs.writeFileSync(
-		'./src/routes/stData.js',
+		'../src/routes/stData.js',
 		`
 	// fetched: ${new Date().toJSON().slice(0, 10).replace(/-/g, '/')}
 	// total cast: ${castCount}

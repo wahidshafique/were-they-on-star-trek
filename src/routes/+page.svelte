@@ -34,7 +34,7 @@
 			<Logo />
 			<h2 class="mt-6 text-center text-3xl font-bold">Were They on Star Trek?</h2>
 			<p class="mt-6 text-center">
-				Search for any TV Show or Actor, and you'll see whether there are any <span
+				Search for any TV Show, Movie or Actor, and you'll see whether there are any <span
 					title="The Star Trek canon includes the original series, seven spin-off television series, three animated series, and thirteen films."
 					class="underline decoration-dotted">connections</span
 				> to Star Trek.
@@ -42,7 +42,7 @@
 		</div>
 		<form action="javascript:void(0);">
 			<div class="mt-5">
-				<label for="search" class="sr-only">Search for a show or actor</label>
+				<label for="search" class="sr-only">Search for a show, movie or actor</label>
 				<input
 					id="search"
 					name="search"
@@ -50,7 +50,7 @@
 					required
 					on:input={handleInput}
 					class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-					placeholder="Better Call Saul"
+					placeholder="e.g. Better Call Saul"
 				/>
 			</div>
 		</form>
@@ -58,7 +58,9 @@
 			<a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
 				<img src={tmdbLogo} alt="The Movie Database" srcset="" width="100px" />
 			</a>
-			<span class="text-xs">{searchQueryResults?.length ?? 0} Result(s)</span>
+			<span class="text-xs"
+				>{searchQueryResults?.length ? `${searchQueryResults.length} Result(s)` : ''}</span
+			>
 		</div>
 	</div>
 	<SearchPreviewPane searchResults={searchQueryResults} />

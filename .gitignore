@@ -16,3 +16,4 @@ backups
 
 *.deb
 not
+popularSearches.json
