@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Modal from './modal.svelte';
-	import notFoundImage from '$lib/assets/404-tribble.jpeg';
+	import notFoundImage from '$lib/assets/404-tribble.webp';
 	import type { Role } from './types';
 	export let role: Role;
 	/** reveals extra deets like when and where they starred, plus character info*/

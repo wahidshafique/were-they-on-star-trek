@@ -11,16 +11,11 @@
 	/>
 </div>
 
-<div class="bg-white">
-	<slot />
-</div>
+<slot />
 
 <style lang="postcss">
 	:global(html) {
-		background-color: theme(colors.gray.100);
+		background-color: #1a2728;
 		color: white;
-	}
-	body {
-		min-height: 100vh;
 	}
 </style>

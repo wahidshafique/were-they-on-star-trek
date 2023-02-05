@@ -12,8 +12,10 @@
 	$: searchResult = { ...data };
 </script>
 
-<div class="isolate">
-	<nav class="flex h-9 items-center justify-center pt-10" aria-label="Global">
+<div
+	class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 isolate flex-col text-center"
+>
+	<nav class="flex h-9 items-center justify-center" aria-label="Global">
 		<div class="flex lg:min-w-0 lg:flex-1" aria-label="Global">
 			<Logo />
 		</div>

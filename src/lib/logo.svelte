@@ -7,7 +7,6 @@
 <audio src={commBadgeSound} bind:this={commBadgeChirp} />
 <a
 	href="/"
-	class="w-screen"
 	on:click={() => {
 		commBadgeChirp.play();
 	}}

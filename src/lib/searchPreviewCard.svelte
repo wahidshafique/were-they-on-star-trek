@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import searchResultCookie from './helpers/searchResultCookie';
-	import notFoundImage from '$lib/assets/404-tribble.jpeg';
+	import notFoundImage from '$lib/assets/404-tribble.webp';
 	import type { FilteredSearchResult } from './types';
 	export let result: FilteredSearchResult;
 	// remove the extra type detail visually, sometimes this card appears in other contexts where type is not needed

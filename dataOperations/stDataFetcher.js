@@ -10,7 +10,7 @@ import desc from 'metascraper-description';
 import url from 'metascraper-url';
 import { data as existingStData } from '../src/routes/stData.js';
 
-config({ path: __dirname + '../.env' });
+config({ path: '../.env' });
 // these ranks present issues when sending string over to mem alpha so we need to strip them
 import ranksToStrip from './rank-abbr-to-strip.json' assert { type: 'json' };
 
@@ -127,7 +127,6 @@ for (const mediaId of [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MO
 				// on avg takes ~2.5 to ~8 seconds
 				console.log('actor ', roleData.person.original_name);
 				console.log('searching for ', roleData.media.character);
-				console.log(ranksToStrip);
 				const rankMatchPattern = new RegExp(ranksToStrip.join('|'), 'gi');
 				// TODO: this works but takes a hell of long time
 				await getContent(
