@@ -4,6 +4,7 @@ import { API_KEY, SUPABASE_SERVICE_KEY, SUPABASE_URL } from '$env/static/private
 import searchResultCookie from '$lib/helpers/searchResultCookie';
 import type { PageServerLoad } from './$types';
 import { createClient } from '@supabase/supabase-js';
+import { dev } from '$app/environment';
 
 const IMG_THUMB_BG_URL = `https://image.tmdb.org/t/p/w200/`;
 
@@ -98,13 +99,15 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 		};
 	}
 
-	// later on the id's are digested by a prebuild popularity checker
-	await supabase.rpc('upsertPopular', {
-		media_id_to_upsert: params.slug,
-		name_to_upsert: mediaEntityDataToReturn.name,
-		type_to_upsert: mediaEntityDataToReturn.type,
-		image_to_upsert: mediaEntityDataToReturn.image,
-	});
+	// later on the id's are digested by a prebuild popularity checker (if in prod)
+	if (!dev) {
+		await supabase.rpc('upsertPopular', {
+			media_id_to_upsert: params.slug,
+			name_to_upsert: mediaEntityDataToReturn.name,
+			type_to_upsert: mediaEntityDataToReturn.type,
+			image_to_upsert: mediaEntityDataToReturn.image,
+		});
+	}
 
 	return mediaEntityDataToReturn;
 };
