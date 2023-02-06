@@ -79,8 +79,8 @@
 					<img src={tutImg4} alt="edit page" />
 				</li>
 				<li>
-					Head to guest stars and edit the entry to be the Canonical name (always reference Alpha
-					Prime, with the same spelling), which in this case is <a
+					Head to guest stars and edit/add the entry to be the Canonical name (always reference
+					Alpha Prime, with the same spelling), which in this case is <a
 						href="https://memory-alpha.fandom.com/wiki/Carl_Torres">Carl Torres</a
 					>
 					<img src={tutImg5} alt="Edit modal" />
