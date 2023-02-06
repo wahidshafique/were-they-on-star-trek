@@ -16,6 +16,8 @@ export interface FilteredSearchResult {
 	type: mediaEntityType;
 	/** used for subsequent searching */
 	id: string;
+	/** when coming from pop json **/
+	hits?: number;
 	/** person specific, only when called via person search (not multi) */
 	birthday?: string;
 	deathday?: string;

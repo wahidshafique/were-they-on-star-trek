@@ -12,6 +12,10 @@
 	$: searchResult = { ...data };
 </script>
 
+<svelte:head>
+	<title>{searchResult.name} | Were they on Star Trek?</title>
+</svelte:head>
+
 <div
 	class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 isolate flex-col text-center"
 >

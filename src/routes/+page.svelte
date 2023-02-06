@@ -26,6 +26,10 @@
 	}, 1000);
 </script>
 
+<svelte:head>
+	<title>Were they on Star Trek?</title>
+</svelte:head>
+
 <div
 	class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 isolate flex-col"
 >
@@ -74,7 +78,7 @@
 				target="_blank"
 				rel="noreferrer"
 				href="https://github.com/wahidshafique/were-they-on-star-trek"
-				class="hover:underline">wahidshafique</a
+				class="underline">wahidshafique</a
 			>
 		</span>
 	</footer>
