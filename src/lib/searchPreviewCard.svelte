@@ -9,7 +9,7 @@
 
 	const handleClick = () => {
 		// store the details of our results so we do not need to make another request. Only relevant when you search for people
-		/** cookie is just for the server to know that we are in sveltekit client mode and have store data as we navigate forward*/
+		/** cookie is just for the server to know that we are in sveltekit client mode and have stored data as we navigate forward*/
 		searchResultCookie.set(result);
 		goto('/search/' + result.id + `?${result.type}`);
 	};

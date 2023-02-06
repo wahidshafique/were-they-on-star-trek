@@ -13,5 +13,11 @@
 >
 	<span class="sr-only">Home</span>
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<img class="mx-auto h-12 w-auto invert" src={stLogo} alt="Star Trek Logo" />
+	<img
+		width="31px"
+		height="48px"
+		class="mx-auto h-12 w-auto invert"
+		src={stLogo}
+		alt="Star Trek Logo"
+	/>
 </a>

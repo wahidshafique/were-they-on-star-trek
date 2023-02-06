@@ -14,13 +14,17 @@
 
 <div class="fixed -top-[50%] -left-[50%] w-[200%] h-[200%]">
 	<img
-		class="absolute m-auto inset-0 min-w-[50%] min-h-[50%] brightness-[30%]"
+		class="absolute m-auto inset-0 min-w-[50%] min-h-[50%] brightness-[20%]"
 		src={bgImage}
 		alt=""
 	/>
 </div>
 
-<slot />
+<div
+	class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 isolate flex-col text-center"
+>
+	<slot />
+</div>
 
 <style lang="postcss">
 	:global(html) {

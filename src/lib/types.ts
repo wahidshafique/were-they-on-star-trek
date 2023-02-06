@@ -15,7 +15,7 @@ export interface FilteredSearchResult {
 	name: string;
 	type: mediaEntityType;
 	/** used for subsequent searching */
-	id: string;
+	id: number;
 	/** when coming from pop json **/
 	hits?: number;
 	/** person specific, only when called via person search (not multi) */
@@ -33,7 +33,6 @@ export interface FoundPersonOnStarTrek extends FilteredSearchResult {
 interface ServerActorData extends FilteredSearchResult {
 	profile_path: string;
 	original_name: string;
-	id: string;
 	roles: Role[];
 	/** if its a movie, then we get simply character */
 	character?: string;
