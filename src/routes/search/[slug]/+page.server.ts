@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import { dev } from '$app/environment';
 
 const IMG_THUMB_BG_URL = `https://image.tmdb.org/t/p/w200/`;
+const TMDB_URL = `https://www.themoviedb.org/`;
 
 const makeFullImageUrl = (e) => (e ? IMG_THUMB_BG_URL + e : null);
 
@@ -60,6 +61,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 		// modify the data to create a custom 'headline'
 		mediaEntityDataToReturn = {
 			id: params.slug,
+			originalTmdbUrl: TMDB_URL + mediaEntityEnum.person + '/' + params.slug,
 			...foundPersonData,
 			...stData[params.slug],
 		};
@@ -75,6 +77,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 		const totalityOfMatchingActors = foundTvData.aggregate_credits.cast.reduce(castReducer, []);
 		mediaEntityDataToReturn = {
 			id: params.slug,
+			originalTmdbUrl: TMDB_URL + mediaEntityEnum.tv + '/' + params.slug,
 			name: foundTvData.original_name,
 			image: makeFullImageUrl(foundTvData.backdrop_path),
 			type: mediaEntityEnum.tv,
@@ -92,6 +95,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 		const totalityOfMatchingActors = foundMovieData.credits.cast.reduce(castReducer, []);
 		mediaEntityDataToReturn = {
 			id: params.slug,
+			originalTmdbUrl: TMDB_URL + mediaEntityEnum.movie + '/' + params.slug,
 			name: foundMovieData.original_title,
 			image: makeFullImageUrl(foundMovieData.poster_path),
 			type: mediaEntityEnum.movie,

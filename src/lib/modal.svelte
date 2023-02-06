@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Portal from 'svelte-portal';
-	import { createEventDispatcher, onDestroy, onMount, afterUpdate } from 'svelte';
+	import { createEventDispatcher, onDestroy } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 	const close = () => dispatch('close');
@@ -42,7 +42,7 @@
 	<div class="fixed top-0 left-0 w-full h-full z-50 bg-black" on:click={close} />
 
 	<div
-		class="text-center px-3 fixed overflow-auto bg-sciencesUniform w-screen max-w-md isolate z-50 inset-x-1/2 -translate-x-2/4 top-[40px] max-h-[720px]"
+		class="text-center top-0 px-3 fixed overflow-auto bg-sciencesUniform w-screen max-w-max isolate z-50 inset-x-1/2 -translate-x-2/4 max-h-[720px]"
 		role="dialog"
 		aria-modal="true"
 		bind:this={modal}

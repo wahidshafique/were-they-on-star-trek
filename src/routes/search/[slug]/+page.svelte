@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FoundDataIssueModal from '$lib/foundDataIssueModal.svelte';
 	import Logo from '$lib/logo.svelte';
 	import SingleActorPane from '$lib/singleActorPane.svelte';
 	import TvMoviePane from '$lib/tvMoviePane.svelte';
@@ -22,7 +23,15 @@
 	</div>
 </nav>
 {#if searchResult.type === 'person'}
-	<SingleActorPane {searchResult} />
+	<SingleActorPane {searchResult}>
+		<div slot="subtitle">
+			<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
+		</div>
+	</SingleActorPane>
 {:else if searchResult.type === 'tv' || searchResult.type === 'movie'}
-	<TvMoviePane {searchResult} />
+	<TvMoviePane {searchResult}>
+		<div slot="subtitle">
+			<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
+		</div>
+	</TvMoviePane>
 {/if}

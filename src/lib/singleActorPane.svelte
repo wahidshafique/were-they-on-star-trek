@@ -15,6 +15,7 @@
 	{resultHeadline}
 </h2>
 
+<slot name="subtitle" />
 <!-- TODO: small design flaw here
 		in an effort to cut down a redundant request, the results displayed on this page are carried over from multisearch _if_
 		we are client side navigating. If you refresh this page once you hit it, it makes a new request (not multisearch but instead for a person), and therefore it gets the bio info
