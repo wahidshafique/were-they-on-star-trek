@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 config({ path: '../.env' });
 
-const MAX_POPULAR_ITEMS = 12;
+const MAX_POPULAR_ITEMS = 24;
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
