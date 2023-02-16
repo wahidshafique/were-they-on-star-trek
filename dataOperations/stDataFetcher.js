@@ -15,7 +15,7 @@ config({ path: '../.env' });
 import ranksToStrip from './rank-abbr-to-strip.json' assert { type: 'json' };
 
 // WARNING: if true, the script will start the crawl process anew, which may about 10+ hours of execution time
-const RECRAWL_EXISTING_CHARACTERS = false;
+const RECRAWL_EXISTING_CHARACTERS = true;
 
 const metascraper = _metascraper([image(), desc(), url()]);
 /**
