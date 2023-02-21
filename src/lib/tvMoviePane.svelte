@@ -11,11 +11,10 @@
 	export let searchResult: IntersectingPeopleOnStarTrek;
 	const resultHeadline = `${searchResult.name} has ${searchResult?.totalityOfMatchingActors?.length} actors that were once on Star Trek`;
 	const { totalityOfMatchingActors = [] } = searchResult;
-	// ie tried to be clever
-	const isLongList = totalityOfMatchingActors?.length > 150;
-
+	// to save on carbon emissions
+	const isLongList = totalityOfMatchingActors?.length > 30;
 	// for the confetti easter egg
-	let showConfetti = isLongList;
+	let showConfetti = totalityOfMatchingActors?.length > 150;
 	onMount(() => {
 		setTimeout(() => {
 			showConfetti = false;
