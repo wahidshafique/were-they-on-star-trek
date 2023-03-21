@@ -11,7 +11,6 @@
 
 	export let data: FilteredSearchResult & FoundPersonOnStarTrek & IntersectingPeopleOnStarTrek;
 	$: searchResult = { ...data };
-	console.log(data);
 </script>
 
 <svelte:head>
