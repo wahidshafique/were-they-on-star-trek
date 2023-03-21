@@ -23,6 +23,7 @@ const metascraper = _metascraper([image(), desc(), url()]);
  * as driver for getting the rendered HTML.
  */
 import _browserless from 'browserless';
+import { CANON_ANIMATED_TV, CANON_ST_MOVIES, CANON_ST_TV } from '../src/sharedConstants.js';
 
 const browserless = _browserless();
 
@@ -39,40 +40,11 @@ const getContent = async (url) => {
 	return promise;
 };
 
-const CANON_ST_TV_IDS = [
-	253, // tos
-	655, // tng
-	580, // ds9
-	1855, // voy
-	314, // ent
-	67198, // disco
-	85949, // picard
-	9030, // snw
-];
+const CANON_ST_TV_IDS = Object.values(CANON_ST_TV);
 
-const CANON_ANIMATED_IDS = [
-	1992, // tas
-	85948, // low
-	106393, // prod
-];
+const CANON_ANIMATED_IDS = Object.values(CANON_ANIMATED_TV);
 
-const CANON_ST_MOVIE_IDS = [
-	152, // motion picture
-	154, // wrath of khan
-	157, // search for spock
-	168, // voyage home
-	172, // final frontier
-	174, // undiscovered country
-
-	193, // generations
-	199, // first contact
-	200, // insurrection
-	201, // nemesis
-
-	13475, // star trek
-	54138, // into darkness
-	188927, // beyond
-];
+const CANON_ST_MOVIE_IDS = Object.values(CANON_ST_MOVIES);
 
 const apiKey = process.env.API_KEY;
 
