@@ -15,8 +15,8 @@
 
 	const handleInput = debounce((e: Event) => {
 		const target = e.target as HTMLInputElement;
+		searchQuery = target.value;
 		if (target.value.length > 1) {
-			searchQuery = target.value;
 			fetch(`api/multisearch?query=${encodeURI(searchQuery)}`)
 				.then((response) => response.json())
 				.then((data) => {
@@ -88,9 +88,13 @@
 		<a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
 			<img src={tmdbLogo} alt="The Movie Database" srcset="" width="100px" height="8px" />
 		</a>
-		<span class="text-xs"
-			>{searchQueryResults?.length ? `${searchQueryResults.length} Result(s)` : ''}</span
-		>
+		{#if searchQuery && searchQuery?.length > 0}
+			<span class="text-xs" aria-live="polite"
+				>{searchQueryResults?.length
+					? `${searchQueryResults.length} Result(s)`
+					: `No Results found for ${searchQuery}! 😢`}</span
+			>
+		{/if}
 	</div>
 </div>
 <SearchPreviewPane searchResults={searchQueryResults} />
