@@ -155,6 +155,7 @@ try {
 		'./errata/errata.js',
 		`
 	// fetched: ${new Date().toJSON().slice(0, 10).replace(/-/g, '/')}
+	// total: ${finalMissingWikiEntries.length}
 	export const errata = ${JSON.stringify(finalMissingWikiEntries)}`,
 	);
 } catch (e) {
