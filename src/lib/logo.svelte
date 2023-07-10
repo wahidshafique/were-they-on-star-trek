@@ -9,6 +9,9 @@
 	href="/"
 	on:click={() => {
 		commBadgeChirp.play();
+		setTimeout(() => {
+			window.location.reload();
+		}, 500);
 	}}
 >
 	<span class="sr-only">Home</span>

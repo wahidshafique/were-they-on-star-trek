@@ -12,8 +12,17 @@
 	let searchQueryResults: FilteredSearchResults;
 
 	let connectionDetailModalOpen = false;
+	let isSearching = false;
 
-	const handleInput = debounce((e: Event) => {
+	const handleInputTouch = (e: Event) => {
+		const target = e.target as HTMLInputElement;
+		isSearching = true;
+		if (target.value.length === 0) {
+			searchQueryResults = [];
+		}
+	};
+
+	const handleInputSearch = debounce((e: Event) => {
 		const target = e.target as HTMLInputElement;
 		searchQuery = target.value;
 		if (target.value.length > 1) {
@@ -25,7 +34,12 @@
 				.catch((error) => {
 					console.log(error);
 					return [];
+				})
+				.finally(() => {
+					isSearching = false;
 				});
+		} else {
+			isSearching = false;
 		}
 	}, 1000);
 </script>
@@ -35,18 +49,20 @@
 </svelte:head>
 
 <div class="w-full max-w-md space-y-3">
-	<div>
-		<Logo />
-		<h2 class="mt-6 text-center text-3xl font-bold">Were they on Star Trek?</h2>
-		<p class="mt-6 text-center">
-			Search for any TV Show, Movie or Actor, and you'll see whether there are any <span
-				on:click={() => {
-					connectionDetailModalOpen = true;
-				}}
-				class="cursor-pointer underline decoration-dotted">connections</span
-			> to Star Trek.
-		</p>
-	</div>
+	<Logo />
+	{#if !searchQueryResults?.length}
+		<div>
+			<h2 class="mt-6 text-center text-3xl font-bold">Were they on Star Trek?</h2>
+			<p class="mt-6 text-center">
+				Search for any TV Show, Movie or Actor, and you'll see whether there are any <span
+					on:click={() => {
+						connectionDetailModalOpen = true;
+					}}
+					class="cursor-pointer underline decoration-dotted">connections</span
+				> to Star Trek.
+			</p>
+		</div>
+	{/if}
 
 	{#if connectionDetailModalOpen}
 		<Modal
@@ -78,7 +94,8 @@
 				name="search"
 				type="search"
 				required
-				on:input={handleInput}
+				on:input={handleInputTouch}
+				on:input={handleInputSearch}
 				class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 				placeholder="e.g. Better Call Saul"
 			/>
@@ -97,7 +114,7 @@
 		{/if}
 	</div>
 </div>
-<SearchPreviewPane searchResults={searchQueryResults} />
+<SearchPreviewPane {isSearching} searchResults={searchQueryResults} />
 
 <footer class="m-2 p-2 rounded-lg shadow md:flex md:items-center md:justify-between bg-gray-700">
 	<span class="text-xs sm:text-center text-gray-400"
