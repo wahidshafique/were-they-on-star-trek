@@ -1,6 +1,9 @@
 <script>
 	import '../app.css';
 	import bgImage from '$lib/assets/casey-horner-RmoWqDCqN2E-unsplash.webp';
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+	inject({ mode: dev ? 'development' : 'production' });
 </script>
 
 <svelte:head>
