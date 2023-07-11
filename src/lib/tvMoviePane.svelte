@@ -5,6 +5,7 @@
 	import type { IntersectingPeopleOnStarTrek } from './types';
 	import LongListWrapper from './longListWrapper.svelte';
 	import Confetti from './confetti.svelte';
+	import popularOverlaps from '../routes/popularOverlaps.json';
 	import { onMount } from 'svelte';
 
 	// this component shows you the results; the actors roles in star trek listed out
@@ -14,7 +15,7 @@
 	// to save on carbon emissions
 	const isLongList = totalityOfMatchingActors?.length > 30;
 	// for the confetti easter egg
-	let showConfetti = totalityOfMatchingActors?.length > 150;
+	let showConfetti = totalityOfMatchingActors?.length > popularOverlaps[0].actor_overlaps;
 	onMount(() => {
 		setTimeout(() => {
 			showConfetti = false;

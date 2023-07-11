@@ -17,4 +17,5 @@ backups
 *.deb
 not
 popularSearches.json
+popularOverlaps.json
 .vercel

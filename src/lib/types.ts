@@ -18,6 +18,7 @@ export interface FilteredSearchResult {
 	id: number;
 	/** when coming from pop json **/
 	hits?: number;
+	actor_overlaps?: number;
 	originalTmdbUrl?: string;
 	/** person specific, only when called via person search (not multi) */
 	birthday?: string;

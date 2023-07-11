@@ -3,33 +3,83 @@
 	import SearchPreviewCard from './searchPreviewCard.svelte';
 	import type { FilteredSearchResults } from '$lib/types';
 	import popularSearches from '../routes/popularSearches.json';
+	import popularOverlaps from '../routes/popularOverlaps.json';
 
 	export let searchResults: FilteredSearchResults = [];
 	export let isSearching: boolean = false;
+	$: hasSearchResults = searchResults.length > 0;
+
+	const tabItems = {
+		top: 'Top Searches',
+		fame: 'Hall of Fame',
+		results: 'Results',
+	};
+
+	const tabEntries = Object.entries(tabItems) as Array<[keyof typeof tabItems, string]>;
+	let current: keyof typeof tabItems = 'top';
+
+	$: {
+		if (isSearching) {
+			current = 'results';
+		}
+		if (!hasSearchResults) {
+			current = 'top';
+		}
+	}
 </script>
 
-<div class="border-2 mt-5">
-	{#if !searchResults.length && !isSearching}
-		<p class="text-center mt-3 font-bold">Top Searches</p>
-	{/if}
-	<div class="mx-auto max-w-2xl py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
-		<h2 class="sr-only">Search Results</h2>
+<div class="tabs">
+	<div role="tablist" class="flex gap-2">
+		{#each tabEntries as [tabKey, tabValue]}
+			<button
+				role="tab"
+				class="text-center mt-3 font-bold border-2 border-b-0 opacity-50"
+				class:active={current === tabKey}
+				on:click={() => {
+					current = tabKey;
+				}}
+				disabled={!hasSearchResults && tabKey === 'results'}
+				aria-selected={current === tabKey}
+				aria-controls={tabKey}><span class="p-3 text-sm md:text-md">{tabValue}</span></button
+			>
+		{/each}
+	</div>
 
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-			{#if isSearching}
-				<div>
-					<p class="text-3xl">Scanning...</p>
-					<img src={idleGif} alt="Janeway waiting" />
-				</div>
-			{:else if searchResults.length > 0}
-				{#each searchResults as result, i}
-					<SearchPreviewCard {result} />
-				{/each}
-			{:else if popularSearches.length > 0}
-				{#each popularSearches as result, i}
-					<SearchPreviewCard result={{ ...result, id: result.media_id }} />
-				{/each}
-			{/if}
+	<div class="border-2">
+		<div class="mx-auto max-w-2xl py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+			<h2 class="sr-only">Results</h2>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+				{#if current === 'top'}
+					{#each popularSearches as result, i}
+						<SearchPreviewCard result={{ ...result, id: result.media_id }} />
+					{/each}
+				{/if}
+				{#if current === 'fame'}
+					{#each popularOverlaps as result, i}
+						<SearchPreviewCard result={{ ...result, id: result.media_id }} />
+					{/each}
+				{/if}
+				{#if current === 'results'}
+					{#if isSearching}
+						<div>
+							<p class="text-3xl">Scanning...</p>
+							<img src={idleGif} alt="Janeway waiting" />
+						</div>
+					{:else if hasSearchResults}
+						{#each searchResults as result, i}
+							<SearchPreviewCard {result} />
+						{/each}
+					{/if}
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
+
+<style>
+	.active {
+		@apply border-t-4;
+		@apply opacity-100;
+	}
+</style>

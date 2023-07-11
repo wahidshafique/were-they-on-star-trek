@@ -21,9 +21,16 @@
 	>
 		{#if result?.hits}
 			<span
-				title="test"
+				title="results"
 				class=" text-white text-xs font-medium px-2.5 py-0.5 rounded-lg bg-gray-700 border border-white absolute right-0"
-				>🔎 {result.hits}</span
+				>{result.hits} views</span
+			>
+		{/if}
+		{#if result?.actor_overlaps}
+			<span
+				title="results"
+				class=" text-white text-xs font-medium px-2.5 py-0.5 rounded-lg bg-gray-700 border border-white absolute right-0"
+				>{result.actor_overlaps} overlap(s)</span
 			>
 		{/if}
 		<img
