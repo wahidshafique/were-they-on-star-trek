@@ -9,7 +9,8 @@ import { dev } from '$app/environment';
 const IMG_THUMB_BG_URL = `https://image.tmdb.org/t/p/w200/`;
 const TMDB_URL = `https://www.themoviedb.org/`;
 
-const makeFullImageUrl = (e) => (e ? IMG_THUMB_BG_URL + e : null);
+/** prepend the url with appropriate width */
+const makeFullImageUrl = (e: string) => (e ? IMG_THUMB_BG_URL + e : null);
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
@@ -89,7 +90,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 			`https://api.themoviedb.org/3/movie/${params.slug}?api_key=${API_KEY}&append_to_response=credits`,
 		);
 		foundMovieData = await movieRes.json();
-		if (foundMovieData.success && fundMfoundMovieData.success === false) {
+		if (foundMovieData?.success && foundMovieData.success === false) {
 			return;
 		}
 		const totalityOfMatchingActors = foundMovieData.credits.cast.reduce(castReducer, []);
@@ -104,12 +105,13 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 	}
 
 	// later on the id's are digested by a prebuild popularity checker (if in prod)
-	if (!dev) {
+	if (dev) {
 		await supabase.rpc('upsertPopular', {
 			media_id_to_upsert: params.slug,
 			name_to_upsert: mediaEntityDataToReturn.name,
 			type_to_upsert: mediaEntityDataToReturn.type,
 			image_to_upsert: mediaEntityDataToReturn.image,
+			overlaps_to_upsert: mediaEntityDataToReturn.totalityOfMatchingActors?.length || 1,
 		});
 	}
 
