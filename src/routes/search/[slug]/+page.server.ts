@@ -105,7 +105,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 	}
 
 	// later on the id's are digested by a prebuild popularity checker (if in prod)
-	if (dev) {
+	if (!dev) {
 		await supabase.rpc('upsertPopular', {
 			media_id_to_upsert: params.slug,
 			name_to_upsert: mediaEntityDataToReturn.name,
