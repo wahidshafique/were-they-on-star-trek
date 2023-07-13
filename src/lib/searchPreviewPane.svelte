@@ -4,6 +4,7 @@
 	import type { FilteredSearchResults } from '$lib/types';
 	import popularSearches from '../routes/popularSearches.json';
 	import popularOverlaps from '../routes/popularOverlaps.json';
+	import { fade } from 'svelte/transition';
 
 	export let searchResults: FilteredSearchResults = [];
 	export let isSearching: boolean = false;
@@ -40,7 +41,7 @@
 				}}
 				disabled={!hasSearchResults && tabKey === 'results'}
 				aria-selected={current === tabKey}
-				aria-controls={tabKey}><span class="p-3 text-sm md:text-md">{tabValue}</span></button
+				aria-controls={tabKey}><span class="px-3 py-4 text-md">{tabValue}</span></button
 			>
 		{/each}
 	</div>
@@ -49,30 +50,52 @@
 		<div class="mx-auto max-w-2xl py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
 			<h2 class="sr-only">Results</h2>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{#if current === 'top'}
-					{#each popularSearches as result, i}
-						<SearchPreviewCard result={{ ...result, id: result.media_id }} />
-					{/each}
-				{/if}
-				{#if current === 'fame'}
-					{#each popularOverlaps as result, i}
-						<SearchPreviewCard result={{ ...result, id: result.media_id }} />
-					{/each}
-				{/if}
-				{#if current === 'results'}
-					{#if isSearching}
-						<div>
-							<p class="text-3xl">Scanning...</p>
-							<img src={idleGif} alt="Janeway waiting" />
-						</div>
-					{:else if hasSearchResults}
-						{#each searchResults as result, i}
-							<SearchPreviewCard {result} />
+			{#if current === 'top'}
+				<div transition:fade>
+					<div
+						role="tabpanel"
+						aria-labelledby={current}
+						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+					>
+						{#each popularSearches as result, i}
+							<SearchPreviewCard result={{ ...result, id: result.media_id }} />
 						{/each}
-					{/if}
-				{/if}
-			</div>
+					</div>
+				</div>
+			{/if}
+			{#if current === 'fame'}
+				<div transition:fade>
+					<div
+						role="tabpanel"
+						aria-labelledby={current}
+						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+					>
+						{#each popularOverlaps as result, i}
+							<SearchPreviewCard result={{ ...result, id: result.media_id }} />
+						{/each}
+					</div>
+				</div>
+			{/if}
+			{#if current === 'results'}
+				<div transition:fade>
+					<div
+						role="tabpanel"
+						aria-labelledby={current}
+						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+					>
+						{#if isSearching}
+							<div>
+								<p class="text-3xl mb-3">Scanning...</p>
+								<img src={idleGif} alt="Janeway waiting" />
+							</div>
+						{:else if hasSearchResults}
+							{#each searchResults as result, i}
+								<SearchPreviewCard {result} />
+							{/each}
+						{/if}
+					</div>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
