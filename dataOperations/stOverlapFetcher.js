@@ -12,6 +12,7 @@ const { data } = await supabase
 	.from('popular_searches')
 	.select('media_id, name, type, image, actor_overlaps')
 	.not('actor_overlaps', 'is', null)
+	.not('name', 'ilike', '%Star Trek%')
 	.order('actor_overlaps', { ascending: false })
 	.limit(MAX_POPULAR_ITEMS);
 
