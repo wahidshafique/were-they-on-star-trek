@@ -17,14 +17,14 @@
 	};
 
 	const tabEntries = Object.entries(tabItems) as Array<[keyof typeof tabItems, string]>;
-	let current: keyof typeof tabItems = 'top';
+	let current: keyof typeof tabItems = 'fame';
 
 	$: {
 		if (isSearching) {
 			current = 'results';
 		}
 		if (!hasSearchResults) {
-			current = 'top';
+			current = 'fame';
 		}
 	}
 </script>
