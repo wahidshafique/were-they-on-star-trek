@@ -30,7 +30,7 @@
 			<span
 				title="results"
 				class=" text-white text-xs font-medium px-2.5 py-0.5 rounded-lg bg-gray-700 border border-white absolute right-0"
-				>{result.actor_overlaps} overlap(s)</span
+				>{result.actor_overlaps} overlaps</span
 			>
 		{/if}
 		<img
