@@ -10,7 +10,7 @@
 
 	// this component shows you the results; the actors roles in star trek listed out
 	export let searchResult: IntersectingPeopleOnStarTrek;
-	const resultHeadline = `${searchResult.name} has ${searchResult?.totalityOfMatchingActors?.length} actors that were once on Star Trek`;
+	const resultHeadlineTail = `has ${searchResult?.totalityOfMatchingActors?.length} actors that were once on Star Trek`;
 	const { totalityOfMatchingActors = [] } = searchResult;
 	// to save on carbon emissions
 	const isLongList = totalityOfMatchingActors?.length > 30;
@@ -23,7 +23,12 @@
 	});
 </script>
 
-<h2 class="mt-6 text-center text-3xl font-bold">{resultHeadline}</h2>
+<h2 class="mt-6 text-center text-3xl font-bold">
+	<a target="_blank" rel="noreferrer" href={`https://en.wikipedia.org/wiki/${searchResult.name}`}
+		>{searchResult.name}</a
+	>
+	{resultHeadlineTail}
+</h2>
 <slot name="subtitle" />
 
 {#if showConfetti}
