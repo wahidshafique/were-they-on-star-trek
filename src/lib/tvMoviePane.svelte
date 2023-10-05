@@ -23,7 +23,7 @@
 	});
 </script>
 
-<h2 class="mt-6 text-center text-3xl font-bold">
+<h2 class="mt-6 text-center text-xl md:text-3xl font-bold">
 	<a target="_blank" rel="noreferrer" href={`https://en.wikipedia.org/wiki/${searchResult.name}`}
 		>{searchResult.name}</a
 	>

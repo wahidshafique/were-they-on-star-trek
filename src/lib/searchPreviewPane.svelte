@@ -41,7 +41,7 @@
 				}}
 				disabled={!hasSearchResults && tabKey === 'results'}
 				aria-selected={current === tabKey}
-				aria-controls={tabKey}><span class="px-3 py-4 text-md">{tabValue}</span></button
+				aria-controls={tabKey}><p class="px-1 py-2 text-md">{tabValue}</p></button
 			>
 		{/each}
 	</div>
