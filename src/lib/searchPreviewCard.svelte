@@ -3,15 +3,20 @@
 	import searchResultCookie from './helpers/searchResultCookie';
 	import notFoundImage from '$lib/assets/404-tribble.webp';
 	import type { FilteredSearchResult } from './types';
+	import { loading } from '../routes/store';
+
 	export let result: FilteredSearchResult;
+
 	// remove the extra type detail visually, sometimes this card appears in other contexts where type is not needed
 	export let hideMediaType: boolean = false;
 
-	const handleClick = () => {
+	const handleClick = async () => {
+		loading.set(true);
 		// store the details of our results so we do not need to make another request. Only relevant when you search for people
 		/** cookie is just for the server to know that we are in sveltekit client mode and have stored data as we navigate forward*/
 		searchResultCookie.set(result);
-		goto('/search/' + result.id + `?${result.type}`);
+		await goto('/search/' + result.id + `?${result.type}`);
+		loading.set(false);
 	};
 </script>
 
