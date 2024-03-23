@@ -56,7 +56,7 @@ export const load: PageServerLoad = async ({ params, error, fetch, cookies, url 
 		} else {
 			foundPersonData = JSON.parse(browserHasDataAlready);
 			// said cookie is deleted here so on refresh of the current page, we get newer data
-			cookies.delete(searchResultCookie.cookieName);
+			/* @migration task: add path argument */ cookies.delete(searchResultCookie.cookieName);
 		}
 		// when you search for a person, no need to fetch anything from api
 		// modify the data to create a custom 'headline'

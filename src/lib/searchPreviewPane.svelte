@@ -51,7 +51,7 @@
 			<h2 class="sr-only">Results</h2>
 
 			{#if current === 'top'}
-				<div transition:fade>
+				<div transition:fade|global>
 					<div
 						role="tabpanel"
 						aria-labelledby={current}
@@ -64,7 +64,7 @@
 				</div>
 			{/if}
 			{#if current === 'fame'}
-				<div transition:fade>
+				<div transition:fade|global>
 					<div
 						role="tabpanel"
 						aria-labelledby={current}
@@ -77,7 +77,7 @@
 				</div>
 			{/if}
 			{#if current === 'results'}
-				<div transition:fade>
+				<div transition:fade|global>
 					<div
 						role="tabpanel"
 						aria-labelledby={current}

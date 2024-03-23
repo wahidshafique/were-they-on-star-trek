@@ -52,7 +52,7 @@
 <div class="w-full max-w-md space-y-3 mb-3">
 	<Logo />
 	{#if !searchQueryResults?.length}
-		<div transition:slide>
+		<div transition:slide|global>
 			<h2 class="mt-6 text-center text-3xl font-bold">Were they on Star Trek?</h2>
 			<p class="mt-6 text-center">
 				Search for any TV Show, Movie or Actor, and you'll see whether there are any <span
