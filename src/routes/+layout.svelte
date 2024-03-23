@@ -3,6 +3,8 @@
 	import bgImage from '$lib/assets/casey-horner-RmoWqDCqN2E-unsplash.webp';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
+	import Logo from '$lib/logo.svelte';
+	import { loading } from './store';
 	inject({ mode: dev ? 'development' : 'production' });
 </script>
 
@@ -14,6 +16,14 @@
 	<link rel="author" href="https://github.com/wahidshafique" />
 	<link rel="canonical" href="https://weretheyonstartrek.com" /></svelte:head
 >
+
+{#if $loading}
+	<div id="loading-screen" class="w-full h-full fixed block top-0 left-0 bg-white opacity-75 z-50">
+		<span class="animate-spin top-1/2 my-0 mx-auto block relative invert">
+			<Logo />
+		</span>
+	</div>
+{/if}
 
 <div class="fixed -top-[50%] -left-[50%] w-[200%] h-[200%]">
 	<img
