@@ -6,7 +6,7 @@ export const CANON_ST_TV = {
 	'Star Trek: Enterprise': 314,
 	'Star Trek: Discovery': 67198,
 	'Star Trek: Picard': 85949,
-	'Star Trek: Strange New Worlds': 9030,
+	'Star Trek: Strange New Worlds': 103516,
 };
 
 export const CANON_ANIMATED_TV = {
