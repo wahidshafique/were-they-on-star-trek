@@ -14,9 +14,6 @@ config({ path: '../.env' });
 // these ranks present issues when sending string over to mem alpha so we need to strip them
 import ranksToStrip from './rank-abbr-to-strip.json' assert { type: 'json' };
 
-// WARNING: if true, the script will start the crawl process anew, which may be a tad longer
-const RECRAWL_EXISTING_CHARACTERS = true;
-
 const metascraper = _metascraper([image(), desc(), url()]);
 /**
  * `browserless` will be passed to `html-get`
@@ -27,8 +24,9 @@ import { CANON_ANIMATED_TV, CANON_ST_MOVIES, CANON_ST_TV } from '../src/sharedCo
 import _async from 'async';
 
 const browserless = _browserless();
+const CRAWL_ALL = true;
 
-const NUM_OF_PARALLEL_PROCS = 30;
+const NUM_OF_PARALLEL_PROCS = 15;
 
 const rfc3986EncodeURIComponent = (str) => {
 	return encodeURIComponent(str).replace(/[!'()*]/g, escape);
@@ -60,14 +58,15 @@ let finalAggregateCredits = {};
 let finalMissingWikiEntries = [];
 let castCount = 0;
 let playedCharacterCount = 0;
+
 console.time('Start of data fetch');
+
 let start = Date.now();
 // populate the tv shows first
 const allStMedia = [...CANON_ST_TV_IDS, ...CANON_ANIMATED_IDS, ...CANON_ST_MOVIE_IDS];
 
 const generateOverlaps = (browserContext) => async (mediaId, cb) => {
 	try {
-		console.log('run it');
 		const isMovie = CANON_ST_MOVIE_IDS.includes(mediaId);
 		// we want the entire cast/crew list
 		const aggRes = isMovie
@@ -81,7 +80,7 @@ const generateOverlaps = (browserContext) => async (mediaId, cb) => {
 			// the casting to array is done to account for movies, which don't have a roles array
 			for (const role of [...(castMembers?.roles ?? [castMembers])]) {
 				playedCharacterCount += 1;
-				console.log('character count', playedCharacterCount);
+				console.log('character count: ', playedCharacterCount);
 
 				const credRes = await fetch(SPECIFIC_CREDIT_EP(role.credit_id));
 				const roleData = await credRes.json();
@@ -93,22 +92,18 @@ const generateOverlaps = (browserContext) => async (mediaId, cb) => {
 
 				let mergedRoleData = { ...existingRole, ...roleData };
 
-				if (
-					!existingRole ||
-					!existingRole?.memAlphaMeta ||
-					(existingRole.memAlphaMeta && RECRAWL_EXISTING_CHARACTERS)
-				) {
+				if (CRAWL_ALL || !existingRole || !existingRole?.memAlphaMeta) {
 					// // crawl it!
 					// on avg takes ~2.5 to ~8 seconds
-					console.log('actor ', roleData.person.original_name);
-					console.log('searching for ', roleData.media.character);
+					console.log('actor: ', roleData.person.original_name);
+					console.log('searching for: ', roleData.media.character);
 					const rankMatchPattern = new RegExp(ranksToStrip.join('|'), 'gi');
 					// TODO: this works but takes a hell of long time
 					const cleanedName = roleData.media.character
 						.replace(rankMatchPattern, '')
 						.replace(/[{()}]/g, '')
 						.trim();
-					console.log('cleaned name', cleanedName);
+					console.log('cleaned name: ', cleanedName);
 					await getContent(
 						`https://memory-alpha.fandom.com/wiki/${rfc3986EncodeURIComponent(cleanedName)}`,
 						browserContext,
@@ -118,7 +113,7 @@ const generateOverlaps = (browserContext) => async (mediaId, cb) => {
 							// the wiki accepts any garbage url happily, a '404' results in a site logo image as part of the meta data
 							if (!metadata.image || metadata.image.includes('Site-logo.png')) {
 								// it is exceedingly rare that a credited character does not show up in the fan wiki.
-								console.log('Character not found ', roleData);
+								console.log('Character not found: ', roleData);
 								finalMissingWikiEntries.push({
 									actor: roleData.person.original_name,
 									role: roleData.media.character,
@@ -127,8 +122,10 @@ const generateOverlaps = (browserContext) => async (mediaId, cb) => {
 								mergedRoleData.memAlphaMeta = metadata;
 							}
 						})
-						.then(browserless.close);
-					//.then(process.exit);
+						.then(browserless.close)
+						.catch((e) => {
+							console.log('scrape err: ', e);
+						});
 				}
 
 				// we only care about a persons 'id' which remains fixed;
@@ -144,9 +141,7 @@ const generateOverlaps = (browserContext) => async (mediaId, cb) => {
 				};
 			}
 		}
-		// cb(); // Call the callback after processing each mediaId
 	} catch (error) {
-		// cb(error); // Pass error to the callback if any
 		console.log(error);
 	}
 };
@@ -157,7 +152,7 @@ await new Promise((resolve, reject) => {
 	_async.eachLimit(allStMedia, NUM_OF_PARALLEL_PROCS, generateOverlaps(browserContext), (err) => {
 		browserContext.then((e) => e.destroyContext());
 		if (err) reject(err);
-		else resolve();
+		else resolve(null);
 	});
 });
 
@@ -172,7 +167,7 @@ try {
 	// total cast: ${castCount}
 	// total characters: ${playedCharacterCount}
 	// execution time ~ ${(Date.now() - start) / 1000}s
-	export const data = ${JSON.stringify(finalAggregateCredits)}`,
+	export const data = ${JSON.stringify(sortObjectByKeys(finalAggregateCredits))}`,
 	);
 
 	// errata
@@ -188,4 +183,13 @@ try {
 } finally {
 	await browserless.close();
 	process.exit();
+}
+
+function sortObjectByKeys(obj) {
+	const sortedKeys = Object.keys(obj).sort((a, b) => a - b);
+	const sortedObj = {};
+	sortedKeys.forEach((key) => {
+		sortedObj[key] = obj[key];
+	});
+	return sortedObj;
 }
