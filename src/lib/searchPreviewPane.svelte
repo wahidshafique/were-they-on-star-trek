@@ -30,7 +30,11 @@
 </script>
 
 <div class="tabs">
-	<div role="tablist" class="flex gap-2">
+	<div
+		role="tablist"
+		aria-label="choose between top searches, hall of fame, or results if you've previously searched for something"
+		class="flex gap-2"
+	>
 		{#each tabEntries as [tabKey, tabValue]}
 			<button
 				role="tab"
@@ -41,8 +45,10 @@
 				}}
 				disabled={!hasSearchResults && tabKey === 'results'}
 				aria-selected={current === tabKey}
-				aria-controls={tabKey}><p class="px-1 py-2 text-md">{tabValue}</p></button
+				aria-controls={tabKey}
 			>
+				<p class="px-1 py-2 text-md">{tabValue}</p>
+			</button>
 		{/each}
 	</div>
 
@@ -54,6 +60,7 @@
 				<div transition:fade|global>
 					<div
 						role="tabpanel"
+						id={tabItems.top}
 						aria-labelledby={current}
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 					>
@@ -67,6 +74,7 @@
 				<div transition:fade|global>
 					<div
 						role="tabpanel"
+						id={tabItems.fame}
 						aria-labelledby={current}
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 					>
@@ -80,6 +88,7 @@
 				<div transition:fade|global>
 					<div
 						role="tabpanel"
+						id={tabItems.results}
 						aria-labelledby={current}
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 					>

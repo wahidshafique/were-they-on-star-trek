@@ -11,9 +11,9 @@
 	// this component shows you the results; the actors roles in star trek listed out
 	export let searchResult: IntersectingPeopleOnStarTrek;
 
-	const actorCount = searchResult?.totalityOfMatchingActors?.length || 0
-	const actorNoun = actorCount === 1 ? "actor" : "actors"
-	const actorVerb = actorCount === 1 ? "was" : "were"
+	const actorCount = searchResult?.totalityOfMatchingActors?.length || 0;
+	const actorNoun = actorCount === 1 ? 'actor' : 'actors';
+	const actorVerb = actorCount === 1 ? 'was' : 'were';
 	const resultHeadlineTail = `has ${actorCount} ${actorNoun} that ${actorVerb} once on Star Trek`;
 
 	const { totalityOfMatchingActors = [] } = searchResult;
@@ -49,7 +49,7 @@
 						result={{
 							image: matchingActorData.queriedActorData.profile_path
 								? 'https://image.tmdb.org/t/p/w200/' +
-								  matchingActorData.queriedActorData.profile_path
+									matchingActorData.queriedActorData.profile_path
 								: null,
 							name: matchingActorData.queriedActorData.original_name,
 							type: 'person',
