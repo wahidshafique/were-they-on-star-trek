@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import idleGif from '$lib/assets/idle.gif';
 	import SearchPreviewCard from './searchPreviewCard.svelte';
 	import type { FilteredSearchResults } from '$lib/types';
@@ -6,9 +8,13 @@
 	import popularOverlaps from '../routes/popularOverlaps.json';
 	import { fade } from 'svelte/transition';
 
-	export let searchResults: FilteredSearchResults = [];
-	export let isSearching: boolean = false;
-	$: hasSearchResults = searchResults.length > 0;
+	interface Props {
+		searchResults?: FilteredSearchResults;
+		isSearching?: boolean;
+	}
+
+	let { searchResults = [], isSearching = false }: Props = $props();
+	let hasSearchResults = $derived(searchResults.length > 0);
 
 	const tabItems = {
 		top: 'Top Searches',
@@ -17,16 +23,16 @@
 	};
 
 	const tabEntries = Object.entries(tabItems) as Array<[keyof typeof tabItems, string]>;
-	let current: keyof typeof tabItems = 'fame';
+	let current: keyof typeof tabItems = $state('fame');
 
-	$: {
+	run(() => {
 		if (isSearching) {
 			current = 'results';
 		}
 		if (!hasSearchResults) {
 			current = 'fame';
 		}
-	}
+	});
 </script>
 
 <div class="tabs">
@@ -40,7 +46,7 @@
 				role="tab"
 				class="text-center mt-3 font-bold border-2 border-b-0 opacity-50"
 				class:active={current === tabKey}
-				on:click={() => {
+				onclick={() => {
 					current = tabKey;
 				}}
 				disabled={!hasSearchResults && tabKey === 'results'}

@@ -2,9 +2,13 @@
 	import Modal from './modal.svelte';
 	import notFoundImage from '$lib/assets/404-tribble.webp';
 	import type { Role } from './types';
-	export let role: Role;
+	interface Props {
+		role: Role;
+	}
+
+	let { role }: Props = $props();
 	/** reveals extra deets like when and where they starred, plus character info*/
-	let showDescriptionModal = false;
+	let showDescriptionModal = $state(false);
 </script>
 
 <div class="group px-5 text-center">
@@ -23,7 +27,7 @@
 			.media.character}
 	</h3>
 	<button
-		on:click={() => {
+		onclick={() => {
 			showDescriptionModal = true;
 		}}
 		class="bg-transparent text-white hover:bg-gray-100 hover:text-gray-800 font-semibold  py-1 px-2 my-2 border border-gray-400 rounded shadow"
@@ -35,9 +39,11 @@
 				showDescriptionModal = false;
 			}}
 		>
-			<h2 slot="header" class="my-1">
-				<small><em>{role.media.character}</em></small>
-			</h2>
+			{#snippet header()}
+						<h2  class="my-1">
+					<small><em>{role.media.character}</em></small>
+				</h2>
+					{/snippet}
 
 			<div class="border-2 p-2 mb-2 max-w-lg">
 				{#if role?.memAlphaMeta}

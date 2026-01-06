@@ -6,12 +6,16 @@
 	import tutImg4 from '$lib/assets/tutorial/ep-descrip.png';
 	import tutImg5 from '$lib/assets/tutorial/edit-modal.png';
 
-	export let originalTmdbUrl = '';
-	let helpModalOpen = false;
+	interface Props {
+		originalTmdbUrl?: string;
+	}
+
+	let { originalTmdbUrl = '' }: Props = $props();
+	let helpModalOpen = $state(false);
 </script>
 
 <button
-	on:click={() => {
+	onclick={() => {
 		helpModalOpen = true;
 	}}
 >
@@ -26,9 +30,11 @@
 			helpModalOpen = false;
 		}}
 	>
-		<h2 slot="header" class="my-1 ml-1">
-			<small><em>Incorrect or missing data?</em></small>
-		</h2>
+		{#snippet header()}
+			<h2 class="my-1 ml-1">
+				<small><em>Incorrect or missing data?</em></small>
+			</h2>
+		{/snippet}
 
 		<div class="border-2 p-2 mb-2 max-w-lg text-left">
 			<a href={originalTmdbUrl} target="_blank" rel="noreferrer">Direct Link to TMDB entry</a>

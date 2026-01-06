@@ -3,10 +3,16 @@
 	import SingleActorCard from './singleActorCard.svelte';
 	import type { FilteredSearchResult, FoundPersonOnStarTrek } from './types';
 	import Modal from './modal.svelte';
-	// this component shows you the results; the actors roles in star trek listed out
-	export let searchResult: FilteredSearchResult & FoundPersonOnStarTrek;
+	
+	interface Props {
+		// this component shows you the results; the actors roles in star trek listed out
+		searchResult: FilteredSearchResult & FoundPersonOnStarTrek;
+		subtitle?: import('svelte').Snippet;
+	}
+
+	let { searchResult, subtitle }: Props = $props();
 	const resultHeadlineTail = `was ${searchResult?.totalityOfRoles ? '' : 'not'} on Star Trek!`;
-	let showActorDetailsModal = false;
+	let showActorDetailsModal = $state(false);
 </script>
 
 <h2 class="mt-6 text-center text-3xl font-bold">
@@ -17,7 +23,7 @@
 	{resultHeadlineTail}
 </h2>
 
-<slot name="subtitle" />
+{@render subtitle?.()}
 <!-- TODO: small design flaw here
 		in an effort to cut down a redundant request, the results displayed on this page are carried over from multisearch _if_
 		we are client side navigating. If you refresh this page once you hit it, it makes a new request (not multisearch but instead for a person), and therefore it gets the bio info
@@ -25,7 +31,7 @@
 	 -->
 {#if searchResult.biography}
 	<button
-		on:click={() => {
+		onclick={() => {
 			showActorDetailsModal = true;
 		}}
 		class="bg-transparent text-white hover:bg-gray-100 hover:text-gray-800 font-semibold  py-1 px-2 my-2 border border-gray-400 rounded shadow"
@@ -37,9 +43,11 @@
 				showActorDetailsModal = false;
 			}}
 		>
-			<h2 slot="header" class="my-1 ml-1">
-				<small><em>{searchResult.name}</em></small>
-			</h2>
+			{#snippet header()}
+						<h2  class="my-1 ml-1">
+					<small><em>{searchResult.name}</em></small>
+				</h2>
+					{/snippet}
 
 			<div class="border-2 p-2 mb-2 max-w-lg">
 				<p class="mb-3">

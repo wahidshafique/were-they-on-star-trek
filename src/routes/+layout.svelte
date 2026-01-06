@@ -1,10 +1,15 @@
-<script>
+<script lang="ts">
 	import '../app.css';
 	import bgImage from '$lib/assets/casey-horner-RmoWqDCqN2E-unsplash.webp';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	import Logo from '$lib/logo.svelte';
 	import { loading } from './store';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 	inject({ mode: dev ? 'development' : 'production' });
 </script>
 
@@ -36,7 +41,7 @@
 <div
 	class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 isolate flex-col text-center"
 >
-	<slot />
+	{@render children?.()}
 </div>
 
 <style lang="postcss">

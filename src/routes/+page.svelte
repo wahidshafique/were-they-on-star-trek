@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { handlers } from 'svelte/legacy';
+
 	import tmdbLogo from '$lib/assets/tmdb-attr.svg';
 	import SearchPreviewPane from '$lib/searchPreviewPane.svelte';
 	import type { FilteredSearchResults } from '$lib/types';
@@ -9,11 +11,11 @@
 	import Logo from '../lib/logo.svelte';
 	import { CANON_ANIMATED_TV, CANON_ST_MOVIES, CANON_ST_TV } from '../sharedConstants';
 
-	let searchQuery: string;
-	let searchQueryResults: FilteredSearchResults;
+	let searchQuery: string = $state();
+	let searchQueryResults: FilteredSearchResults = $state();
 
-	let connectionDetailModalOpen = false;
-	let isSearching = false;
+	let connectionDetailModalOpen = $state(false);
+	let isSearching = $state(false);
 
 	const handleInputTouch = (e: Event) => {
 		const target = e.target as HTMLInputElement;
@@ -56,7 +58,7 @@
 			<h2 class="mt-6 text-center text-3xl font-bold">Were they on Star Trek?</h2>
 			<p class="mt-6 text-center">
 				Search for any TV Show, Movie or Actor, and you'll see whether there are any <span
-					on:click={() => {
+					onclick={() => {
 						connectionDetailModalOpen = true;
 					}}
 					class="cursor-pointer underline decoration-dotted">connections</span
@@ -71,9 +73,11 @@
 				connectionDetailModalOpen = false;
 			}}
 		>
-			<h2 slot="header" class="my-1 ml-1">
-				<small><em>What kind of connections?</em></small>
-			</h2>
+			{#snippet header()}
+						<h2  class="my-1 ml-1">
+					<small><em>What kind of connections?</em></small>
+				</h2>
+					{/snippet}
 
 			<div class="border-2 p-2 mb-2 max-w-lg text-left">
 				The Star Trek canon includes the original series, seven spin-off television series, three
@@ -95,8 +99,7 @@
 				name="search"
 				type="search"
 				required
-				on:input={handleInputTouch}
-				on:input={handleInputSearch}
+				oninput={handlers(handleInputTouch, handleInputSearch)}
 				class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
 				placeholder="e.g. Better Call Saul"
 			/>

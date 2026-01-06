@@ -9,8 +9,12 @@
 		IntersectingPeopleOnStarTrek,
 	} from '$lib/types';
 
-	export let data: FilteredSearchResult & FoundPersonOnStarTrek & IntersectingPeopleOnStarTrek;
-	$: searchResult = { ...data };
+	interface Props {
+		data: FilteredSearchResult & FoundPersonOnStarTrek & IntersectingPeopleOnStarTrek;
+	}
+
+	let { data }: Props = $props();
+	let searchResult = $derived({ ...data });
 </script>
 
 <svelte:head>
@@ -24,14 +28,18 @@
 </nav>
 {#if searchResult.type === 'person'}
 	<SingleActorPane {searchResult}>
-		<div slot="subtitle">
-			<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
-		</div>
+		{#snippet subtitle()}
+				<div >
+				<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
+			</div>
+			{/snippet}
 	</SingleActorPane>
 {:else if searchResult.type === 'tv' || searchResult.type === 'movie'}
 	<TvMoviePane {searchResult}>
-		<div slot="subtitle">
-			<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
-		</div>
+		{#snippet subtitle()}
+						<div >
+				<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
+			</div>
+					{/snippet}
 	</TvMoviePane>
 {/if}

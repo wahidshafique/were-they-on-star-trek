@@ -5,10 +5,15 @@
 	import type { FilteredSearchResult } from './types';
 	import { loading } from '../routes/store';
 
-	export let result: FilteredSearchResult;
 
-	// remove the extra type detail visually, sometimes this card appears in other contexts where type is not needed
-	export let hideMediaType: boolean = false;
+	
+	interface Props {
+		result: FilteredSearchResult;
+		// remove the extra type detail visually, sometimes this card appears in other contexts where type is not needed
+		hideMediaType?: boolean;
+	}
+
+	let { result, hideMediaType = false }: Props = $props();
 	const nextPage = '/search/' + result.id + `?${result.type}`;
 
 	beforeNavigate(({ to }) => {

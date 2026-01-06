@@ -1,5 +1,5 @@
 <!-- a reward for finding a show with lots of overlaps to st -->
-<div class="confetti" />
+<div class="confetti"></div>
 
 <style>
 	.confetti {
