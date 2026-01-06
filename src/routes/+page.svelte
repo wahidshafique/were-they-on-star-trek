@@ -10,6 +10,7 @@
 	import debounce from 'lodash.debounce';
 	import Logo from '../lib/logo.svelte';
 	import { CANON_ANIMATED_TV, CANON_ST_MOVIES, CANON_ST_TV } from '../sharedConstants';
+	import { enhance } from '$app/forms';
 
 	let searchQuery: string = $state();
 	let searchQueryResults: FilteredSearchResults = $state();
@@ -45,6 +46,14 @@
 			isSearching = false;
 		}
 	}, 1000);
+
+	interface Props {
+		data: any;
+	}
+
+	let { data }: Props = $props();
+
+	console.log(data);
 </script>
 
 <svelte:head>
@@ -52,7 +61,9 @@
 </svelte:head>
 
 <div class="w-full max-w-md space-y-3 mb-3">
-	<Logo />
+	<form method="POST" action="?/clickedBadge" use:enhance>
+		<Logo numberOfTimesBadgeClicked={data.badge_clicked.numberOfTimes} />
+	</form>
 	{#if !searchQueryResults?.length}
 		<div transition:slide|global>
 			<h2 class="mt-6 text-center text-3xl font-bold">Were they on Star Trek?</h2>
@@ -74,14 +85,16 @@
 			}}
 		>
 			{#snippet header()}
-						<h2  class="my-1 ml-1">
+				<h2 class="my-1 ml-1">
 					<small><em>What kind of connections?</em></small>
 				</h2>
-					{/snippet}
+			{/snippet}
 
 			<div class="border-2 p-2 mb-2 max-w-lg text-left">
-				The Star Trek canon includes the original series, seven spin-off television series, three
-				animated series, and thirteen films.
+				The Star Trek <a target="_blank" href="https://paramount.fandom.com/wiki/Star_Trek">canon</a
+				>
+				includes the original series, seven spin-off television series, three animated series, and thirteen
+				films.
 				<ul class="list-disc ml-3">
 					{#each Object.keys( { ...CANON_ST_TV, ...CANON_ANIMATED_TV, ...CANON_ST_MOVIES }, ) as mediaItem}
 						<li>{mediaItem}</li>
@@ -106,7 +119,7 @@
 		</div>
 	</form>
 	<div class="flex flex-row justify-between">
-		<a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
+		<a aria-hidden="true" href="https://www.themoviedb.org/" target="_blank" rel="noreferrer">
 			<img src={tmdbLogo} alt="The Movie Database" srcset="" width="100px" height="8px" />
 		</a>
 		{#if searchQuery && searchQuery?.length > 0}

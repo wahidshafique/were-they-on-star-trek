@@ -23,34 +23,50 @@
 	};
 
 	const tabEntries = Object.entries(tabItems) as Array<[keyof typeof tabItems, string]>;
-	let current: keyof typeof tabItems = $state('fame');
+	let currentTabItem: keyof typeof tabItems = $state('fame');
 
 	run(() => {
 		if (isSearching) {
-			current = 'results';
+			currentTabItem = 'results';
 		}
 		if (!hasSearchResults) {
-			current = 'fame';
+			currentTabItem = 'fame';
 		}
 	});
 </script>
 
 <div class="tabs">
 	<div
+		tabindex={0}
 		role="tablist"
-		aria-label="choose between top searches, hall of fame, or results if you've previously searched for something"
+		aria-label="choose between top searches, hall of fame, or results if you've previously searched for something. Press left or right arrow keys to navigate to different tabs."
+		onkeydown={(e) => {
+			const currTabIndex = tabEntries.findIndex(([k, v]) => {
+				return k === currentTabItem;
+			});
+			switch (e.key) {
+				case 'ArrowLeft':
+					currentTabItem = tabEntries[currTabIndex !== 0 ? currTabIndex - 1 : currTabIndex][0];
+					break;
+				case 'ArrowRight':
+					currentTabItem =
+						tabEntries[currTabIndex < tabEntries.length - 1 ? currTabIndex + 1 : currTabIndex][0];
+					break;
+			}
+		}}
 		class="flex gap-2"
 	>
 		{#each tabEntries as [tabKey, tabValue]}
 			<button
 				role="tab"
 				class="text-center mt-3 font-bold border-2 border-b-0 opacity-50"
-				class:active={current === tabKey}
+				class:active={currentTabItem === tabKey}
 				onclick={() => {
-					current = tabKey;
+					currentTabItem = tabKey;
 				}}
+				tabindex={currentTabItem === tabKey ? 0 : -1}
 				disabled={!hasSearchResults && tabKey === 'results'}
-				aria-selected={current === tabKey}
+				aria-selected={currentTabItem === tabKey}
 				aria-controls={tabKey}
 			>
 				<p class="px-1 py-2 text-md">{tabValue}</p>
@@ -62,12 +78,12 @@
 		<div class="mx-auto max-w-2xl py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
 			<h2 class="sr-only">Results</h2>
 
-			{#if current === 'top'}
+			{#if currentTabItem === 'top'}
 				<div transition:fade|global>
 					<div
 						role="tabpanel"
-						id={tabItems.top}
-						aria-labelledby={current}
+						id={'top'}
+						aria-labelledby={currentTabItem}
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 					>
 						{#each popularSearches as result, i}
@@ -76,12 +92,12 @@
 					</div>
 				</div>
 			{/if}
-			{#if current === 'fame'}
+			{#if currentTabItem === 'fame'}
 				<div transition:fade|global>
 					<div
 						role="tabpanel"
-						id={tabItems.fame}
-						aria-labelledby={current}
+						id={'fame'}
+						aria-labelledby={currentTabItem}
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 					>
 						{#each popularOverlaps as result, i}
@@ -90,12 +106,12 @@
 					</div>
 				</div>
 			{/if}
-			{#if current === 'results'}
+			{#if currentTabItem === 'results'}
 				<div transition:fade|global>
 					<div
 						role="tabpanel"
-						id={tabItems.results}
-						aria-labelledby={current}
+						id={'results'}
+						aria-labelledby={currentTabItem}
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 					>
 						{#if isSearching}

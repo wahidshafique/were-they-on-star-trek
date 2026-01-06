@@ -29,17 +29,17 @@
 {#if searchResult.type === 'person'}
 	<SingleActorPane {searchResult}>
 		{#snippet subtitle()}
-				<div >
+			<div>
 				<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
 			</div>
-			{/snippet}
+		{/snippet}
 	</SingleActorPane>
 {:else if searchResult.type === 'tv' || searchResult.type === 'movie'}
 	<TvMoviePane {searchResult}>
 		{#snippet subtitle()}
-						<div >
+			<div>
 				<FoundDataIssueModal originalTmdbUrl={searchResult?.originalTmdbUrl} />
 			</div>
-					{/snippet}
+		{/snippet}
 	</TvMoviePane>
 {/if}
